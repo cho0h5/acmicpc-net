@@ -35,10 +35,10 @@ for command in commands:
 
     # perform action
     if action == 'L':
-        locations[selector-1][2] -= 1
+        locations[selector-1][2] -= repeat
         locations[selector-1][2] %= 4
     elif action == 'R':
-        locations[selector-1][2] += 1
+        locations[selector-1][2] += repeat
         locations[selector-1][2] %= 4
     else:
         if locations[selector-1][2] == 0:
@@ -50,6 +50,37 @@ for command in commands:
         else:
             locations[selector-1][0] -= repeat
 
+    # check collision to another robot
+    if action == 'F':
+        if locations[selector-1][2] % 2 == 0:
+            for another_selector in range(len(locations)):
+                x, y, _ = locations[another_selector]
+                if (_y <= y and y <= locations[selector-1][1]) or (locations[selector-1][1] <= y and y <= _y):
+                    min = 1000
+                    index = 0
+                    if selector != another_selector+1 and x == locations[selector-1][0]:
+                        if abs(locations[selector-1][1] - y) < min:
+                            min = y
+                            index = another_selector + 1
+
+            if min != 1000:
+                print("Robot {} crashes into robot {}".format(selector, index))
+                sys.exit()
+        else:
+            for another_selector in range(len(locations)):
+                x, y, _ = locations[another_selector]
+                if (_x <= x and x <= locations[selector-1][0]) or (locations[selector-1][0] <= x and x <= _x):
+                    min = 1000
+                    index = 0
+                    if selector != another_selector+1 and y == locations[selector-1][1]:
+                        if abs(locations[selector-1][0] - x) < min:
+                            min = x
+                            index = another_selector + 1
+
+            if min != 1000:
+                print("Robot {} crashes into robot {}".format(selector, index))
+                sys.exit()
+
     # check collision to wall
     if locations[selector-1][0] < 1 or A < locations[selector-1][0]:
         print("Robot {} crashes into the wall".format(selector))
@@ -58,19 +89,4 @@ for command in commands:
         print("Robot {} crashes into the wall".format(selector))
         sys.exit()
 
-    # check collision to another robot
-    if action == 'F':
-        if locations[selector-1][2] % 2 == 0:
-            for another_selector in range(len(locations)):
-                x, y, _ = locations[another_selector]
-                if _y <= y or y <= locations[selector-1][1]:
-                    if selector != another_selector+1 and x == locations[selector-1][0]:
-                        print("Robot {} crashes into robot {}".format(selector, another_selector+1))
-                        sys.exit()
-        else:
-            for another_selector in range(len(locations)):
-                x, y, _ = locations[another_selector]
-                if _x <= x or x <= locations[selector-1][0]:
-                    if selector != another_selector+1 and y == locations[selector-1][1]:
-                        print("Robot {} crashes into robot {}".format(selector, another_selector+1))
-                        sys.exit()
+print("OK")
