@@ -1,37 +1,21 @@
 n = int(input())
+result = 0
 
-def checkmate(q1, q2):
-    if q1[0] == q2[0]:
-        return True
-    if q1[1] == q2[1]:
-        return True
-    if q1[0] + q1[1] == q2[0] + q2[1]:
-        return True
-    if q1[0] - q1[1] == q2[0] - q2[1]:
-        return True
-    return False
+r1 = [True] * n
+r2 = [True] * (n * 2 - 1)
+r3 = [True] * (n * 2 - 1)
 
-def rec(n, step, queens):
-    if n == step:
-        result = 0
-        for new_queen in range(1, n + 1):
-            flag = True
-            for prev_queen in queens:
-                if checkmate(prev_queen, (new_queen, step)):
-                    flag = False
-            result += 1 if flag else 0
-        return result
+def rec(step):
+    global result
+    if step == n:
+        result += 1
 
-    result = 0
-    for new_queen in range(1, n + 1):
-        flag = True
-        for prev_queen in queens:
-            if checkmate(prev_queen, (new_queen, step)):
-                flag = False
-        if flag:
-            new_queens = [(new_queen, step)]
-            new_queens.extend(queens)
-            result += rec(n, step + 1, new_queens)
-    return result
+    for i in range(n):
+        if r1[i] and r2[step + i] and r3[n + step - i - 1]:
+            r1[i] = r2[step + i] = r3[n + step - i - 1] = False
+            rec(step + 1)
+            r1[i] = r2[step + i] = r3[n + step - i - 1] = True
 
-print(rec(n, 1, []))
+rec(0)
+
+print(result)
