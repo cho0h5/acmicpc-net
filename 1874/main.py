@@ -11,22 +11,30 @@ ns = []
 for _ in range(n):
     ns.append(int(sys.stdin.readline().strip()))
 
-max_num = max(ns)
-
-stack1 = []
-stack2 = []
-for num in ns:
-    if len(stack1) > 0 and stack1[-1] == max_num:
-        stack2.append(stack1.pop())
-        print("-")
-        max_num -= 1
-
-    if num == max_num:
-        print("+\n-")
-        stack2.append(num)
-        max_num -= 1
+stack = []
+count = 1
+idx = 0
+flag = True
+result = []
+while True:
+    num = ns[idx]
+    if len(stack) > 0 and stack[-1] == num:
+        stack.pop()
+        result.append("-")
+        idx += 1
     else:
-        stack1.append(num)
-        print("+")
-print(len(stack1))
-print(isSorted(stack1) and isSorted(stack2))
+        stack.append(count)
+        count += 1
+        result.append("+")
+
+    if idx == len(ns):
+        break
+    if count > len(ns) + 1:
+        flag = False
+        break
+        
+
+if flag:
+    print("\n".join(result))
+else:
+    print("NO")
