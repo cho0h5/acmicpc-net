@@ -1,32 +1,39 @@
 import sys
+sys.setrecursionlimit(10**9)
 
 n, m = map(int, sys.stdin.readline()[:-1].split())
 ms = {}
+for i in range(1, n+1):
+    ms[i] = []
 
 for _ in range(m):
     a, b = map(int, sys.stdin.readline()[:-1].split())
-    if b in ms.keys():
-        ms[b].append(a)
-    else:
-        ms[b] = [a]
+    if a == b:
+        continue
+    ms[b].append(a)
 
 # print(ms)
 
+search_table = [1] * n
 def search(i):
     if i not in ms.keys():
-        return 1
+        return search_table[i-1]
+
+    if search_table[i-1] != 1:
+        return search_table[i-1]
+
     result = 1
     for j in ms[i]:
         result += search(j)
-    return result
+    search_table[i-1] = result
+    return search_table[i-1]
 
-results = []
 for i in range(1, n + 1):
-    results.append(search(i))
+    search_table[i-1] = search(i)
 
-# print(results)
+# print(search_table)
 
-max_count = max(results)
+max_count = max(search_table)
 for i in range(n):
-    if results[i] == max_count:
+    if search_table[i] == max_count:
         print(i + 1, end=" ")
