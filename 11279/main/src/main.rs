@@ -1,23 +1,25 @@
 use std::collections::BinaryHeap;
-
-fn read_int() -> i32 {
-    let mut n = String::new();
-    std::io::stdin().read_line(&mut n).unwrap();
-    n.pop();
-    n.parse::<i32>().unwrap()
-}
+use std::io::Read;
+use std::fmt::Write;
 
 fn main() {
-    let mut heap = BinaryHeap::new();
-    let n = read_int();
+    let mut input = String::new();
+    std::io::stdin().read_to_string(&mut input).unwrap();
+    let mut input = input.split_ascii_whitespace();
+    let mut output = String::new();
     
-    for _ in 0..n {
-        match read_int() {
+    input.next();
+    
+    let mut heap = BinaryHeap::new();
+    for i in input {
+        let n = i.parse::<i32>().unwrap();
+        match n {
             0 => match heap.pop() {
-                Some(e) => println!("{}", e),
-                _ => println!("0"),
+                Some(e) => writeln!(output, "{}", e).unwrap(),
+                _ => writeln!(output, "0").unwrap(),
             },
             x => heap.push(x),
         }
     }
+    println!("{}", output);
 }
