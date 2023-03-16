@@ -1,33 +1,26 @@
-import math
-from itertools import combinations
+from math import gcd
+from math import ceil
+from math import sqrt
 
-def factorization(n):
-    result = list()
-    for i in range(2, n + 1):
-        while True:
-            if n % i == 0:
-                result.append(i)
-                n = n // i
-            else:
-                break
-    return result
-
-# input
-n = int(input())
-import sys
-
+N = int(input())
 ns = []
-for _ in range(n):
-    ns.append(int(sys.stdin.readline()))
+for _ in range(N):
+    ns.append(int(input()))
 
-# start
-result = set()
-for r in range(0, min(ns) - 1):
-    g = math.gcd(*map(lambda x: x - r, ns))
-    factors = factorization(g)
-    for i in range(1, len(factors) + 1):
-        for cs in combinations(factors, i):
-            result.add(math.prod(cs))
+dn = []
+for i in range(N-1):
+    dn.append(ns[i+1] - ns[i])
 
-result -= set([1])
-print(' '.join(map(str, result)))
+_gcd = dn[0]
+for i in range(N-2):
+    _gcd = gcd(_gcd, dn[i+1])
+
+divisors = set()
+for i in range(1, ceil(sqrt(_gcd)) + 1):
+    if _gcd % i == 0:
+        divisors.add(i)
+        divisors.add(_gcd // i)
+
+divisors.remove(1)
+
+print(' '.join(map(str, sorted(list(divisors)))))
