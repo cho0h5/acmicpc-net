@@ -46,11 +46,11 @@ void solution() {
 	cout << "EMPTY\n";
     } else if(size == 1) {
 	while(m[minq.top()] == 0) minq.pop();
-	cout << minq.top() << ' ' << minq.top();
+	cout << minq.top() << ' ' << minq.top() << '\n';
     } else {
 	while(m[minq.top()] == 0) minq.pop();
 	while(m[maxq.top()] == 0) maxq.pop();
-	cout << maxq.top() << ' ' << minq.top();
+	cout << maxq.top() << ' ' << minq.top() << '\n';
     }
 }
 
