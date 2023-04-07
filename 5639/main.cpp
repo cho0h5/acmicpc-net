@@ -1,39 +1,58 @@
 #include <iostream>
-#include <unordered_map>
 
 using namespace std;
 
-unordered_map<int, int> tree;
+struct Node {
+    int value;
+    Node *left;
+    Node *right;
+};
+Node* newNode();
 
-void insert(int index, int x) {
-    if(tree[index] == 0) {
-	tree[index] = x;
+Node *root;
+
+void insert(Node * n, int x) {
+    if(n->value == 0) {
+	n->value = x;
+	n->left = newNode();
+	n->right = newNode();
 	return;
     }
-    if(tree[index] > x) insert(index * 2 + 1, x);
-    if(tree[index] < x) insert(index * 2 + 2, x);
+    if(n->value > x) insert(n->left, x);
+    if(n->value < x) insert(n->right, x);
 }
 
-void print(int index) {
-    if(tree[index] == 0) return;
-    print(index * 2 + 1);
-    print(index * 2 + 2);
-    cout << tree[index] << '\n';
+Node* newNode() {
+    Node *node;
+    node = (Node*)malloc(sizeof(Node));
+    node->value = 0;
+    node->left = 0;
+    node->right = 0;
+    return node;
+}
+
+void print(Node *n) {
+    if(n->value == 0) return;
+    print(n->left);
+    print(n->right);
+    cout << n->value << '\n';
 }
 
 int main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
 
+    root = newNode();
+
     while(!cin.eof()) {
 	int input;
 	cin >> input;
-	insert(0, input);
+	insert(root, input);
     }
 
 //    cout << "[debug tree]\n";
 //    for(int i = 0; i < 15; i++) cout << tree[i] << ' ';
 //    cout << '\n';
 
-    print(0);
+    print(root);
 }
