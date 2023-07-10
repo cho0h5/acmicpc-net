@@ -34,16 +34,13 @@ int main() {
   int M;
   scanf("%d", &M);
 
-  long long S = 0;
-  long long N = 1;
+  long long sum = 0;
   while(M--) {
     long long n, s;
     scanf("%lld %lld", &n, &s);
 
-    S = S * n + N * s;
-    N = N * n;
-    reduceFraction(&S, &N);
+    long long result = (s * modpow(n, MOD - 2, MOD)) % MOD;
+    sum += result % MOD;
   }
-  long long result = (S * modpow(N, MOD - 2, MOD)) % MOD;
-  printf("%lld\n", result);
+  printf("%lld\n", sum % MOD);
 }
