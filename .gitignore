@@ -16,5 +16,8 @@ Cargo.lock
 bin/
 
 .vscode
+
 main
 !main/
+
+a.out
