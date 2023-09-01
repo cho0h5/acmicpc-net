@@ -24,15 +24,15 @@ void printb() {
 void printv() {
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
-            cout << vis[i][j][0] << ' ';
+            printf("%2d ", vis[i][j][0]);
         }
-        cout << "  ";
+        cout << "\t";
         for (int j = 0; j < m; j++) {
-            cout << vis[i][j][1] << ' ';
+            printf("%2d ", vis[i][j][1]);
         }
-        cout << "  ";
+        cout << "\t";
         for (int j = 0; j < m; j++) {
-            cout << vis[i][j][2] << ' ';
+            printf("%2d ", vis[i][j][2]);
         }
         cout << '\n';
     }
@@ -61,6 +61,13 @@ int main() {
 
             if (board[nx][ny] == '0') {
                 int ns = s;
+
+                if (vis[nx][ny][ns] > vis[x][y][s] + 1) {
+                    vis[nx][ny][ns] = vis[x][y][s] + 1;
+                    q.push({nx, ny, ns});
+                    continue;
+                }
+
                 if (vis[nx][ny][ns] != 0) continue;
 
                 vis[nx][ny][ns] = vis[x][y][s] + 1;
@@ -75,13 +82,14 @@ int main() {
                 q.push({nx, ny, ns});
             }
         }
-    // printv();
     }
+    // printv();
 
     int mmin = 2147483647;
     for (int i = 0; i <= k; i++) {
         int r = vis[n - 1][m - 1][i];
         if (r != 00 && r < mmin) mmin = r;
     }
-    cout << mmin << '\n';
+    if (mmin != 2147483647) cout << mmin << '\n';
+    else cout << "-1\n";
 }
