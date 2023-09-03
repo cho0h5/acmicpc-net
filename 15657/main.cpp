@@ -3,29 +3,43 @@
 
 using namespace std;
 
-int ns[7];
-int p[7];
+int ns[8];
+int p[8];
 int n, t;
 int cnt;
+int isused[8];
 
 void perm(int s) {
     if (s == t) {
         for (int i = 0; i < t; i++) {
             cout << ns[p[i]] << ' ';
+            // cout << p[i] << ' ';
         }
         cout << '\n';
         return ;
     }
 
     if (s == 0) {
+        int prevv = -1;
         for (int i = 0; i < n; i++) {
             p[s] = i;
+            if (isused[i] == 1) continue;
+            if (prevv == ns[i]) continue;
+            isused[i] = 1;
             perm(s + 1);
+            isused[i] = 0;
+            prevv = ns[i];
         }
     } else {
-        for (int i = p[s - 1]; i < n; i++) {
+        int prevv = -1;
+        for (int i = 0; i < n; i++) {
             p[s] = i;
+            if (isused[i] == 1) continue;
+            if (prevv == ns[i]) continue;
+            isused[i] = 1;
             perm(s + 1);
+            isused[i] = 0;
+            prevv = ns[i];
         }
     }
 }
