@@ -1,23 +1,23 @@
 #include <iostream>
-#include <vector>
+#include <map>
 
 using namespace std;
 
-int n, p, q;
-vector<int> vec;
+long long n, p, q;
+map<long long, long long> m;
+
+long long recursive(long long n) {
+	if (n == 0)
+		return 1;
+	if (m.find(n) != m.end())
+		return m[n];
+	long long value = recursive(n / p) + recursive(n / q);
+	m[n] = value;
+	return value;
+}
 
 int main() {
 	cin >> n >> p >> q;
 	
-	vec.push_back(1);
-	for (int i = 1; i <= n; i++) {
-		vec.push_back(vec[i / p] + vec[i / q]);
-	}
-
-//	for (int i = 0; i <= n; i++) {
-//		cout << vec[i] << ' ';
-//	}
-//	cout << '\n';
-
-	cout << vec.back() << '\n';
+	cout << recursive(n) << '\n';
 }
