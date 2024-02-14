@@ -1,36 +1,46 @@
+#include <cctype>
 #include <iostream>
+#include <vector>
 #include <stack>
+#include <algorithm>
+#include <map>
+#include <set>
 
 using namespace std;
 
-string line;
-stack<int> ss;
+void fastio() {
+	ios_base :: sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+}
+
+int recursion(string line, int *i) {
+	// cout << "debug: " << line << ' ' << *i << '\n';
+	int len = 0;
+
+	while (1) {
+		if (*i >= line.size() || line[*i] == ')') {
+			*i += 1;
+			// cout << "debug: " << len << '\n';
+			return len;
+		} else if (*i + 1 < line.size() && line[*i + 1] == '(') {
+			int mul = line[*i];
+			*i += 2;
+			len += (mul - '0') * recursion(line, i);
+		} else if (isdigit(line[*i])) {
+			len += 1;
+			*i += 1;
+		} else {
+			exit(1);
+		}
+	}
+}
 
 int main() {
+	fastio();
+
+	string line;
 	cin >> line;
-	for (auto it = line.begin(); it != line.end(); it++) {
-		if (ss.empty()) {
-			if (*it == '(') {
-				ss.push(-1);
-			} else if (*it == ')') {
-				if (ss.top() == -1) {
-					ss.pop();
-				} else {
-					ss.pop();
-					int tmp = ss.top();
-				}
-
-			} else {
-				if (ss.empty() || ss.top() == -1) {
-					ss.push(0);
-				} else {
-					int tmp = ss.top();
-					ss.pop();
-					ss.push(tmp + 1);
-				}
-			}
-		}
-
-	}
-	
+	int i = 0;
+	cout << recursion(line, &i) << '\n';
 }
