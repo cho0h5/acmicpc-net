@@ -20,40 +20,89 @@ int sticker[10][10];
 int n, m, k;
 int r, c;
 
-void print_sticker1() {
+int check_sticker1(int dx, int dy) {
 	for (int i = 0; i < r; i++) {
 		for (int j = 0; j < c; j++) {
-			cout << sticker[i][j] << ' ';
+			if (notebook[dx + i][dy + j] == 1 && sticker[i][j] == 1)
+				return 0;
 		}
-		cout << '\n';
 	}
-	cout << '\n';
+	return 1;
 }
 
-void print_sticker2() {
+int check_sticker2(int dx, int dy) {
 	for (int i = 0; i < c; i++) {
 		for (int j = r - 1; j >= 0; j--) {
-			cout << sticker[j][i] << ' ';
+			if (notebook[dx + i][dy + r - 1 - j] == 1 && sticker[j][i] == 1)
+				return 0;
 		}
-		cout << '\n';
 	}
-	cout << '\n';
+	return 1;
 }
 
-void print_sticker3() {
+int check_sticker3(int dx, int dy) {
 	for (int i = r - 1; i >= 0; i--) {
 		for (int j = c - 1; j >= 0; j--) {
-			cout << sticker[i][j] << ' ';
+//			cout << "notebookt: " << dx + i << ' ' << dy + r - 1 - j << ' ' << notebook[dx + i][dy + r - 1 - j] << '\n';
+//			cout << "swicker: " <<j << ' ' << i << ' ' << sticker[j][i] << '\n';
+			if (notebook[dx + i][dy + j] == 1 && sticker[i][j] == 1)
+				return 0;
 		}
-		cout << '\n';
 	}
-	cout << '\n';
+	return 1;
 }
 
-void print_sticker4() {
+int check_sticker4(int dx, int dy) {
 	for (int i = c - 1; i >= 0; i--) {
 		for (int j = 0; j < r; j++) {
-			cout << sticker[j][i] << ' ';
+			if (notebook[dx + j][dy + i] == 1 && sticker[j][i] == 1)
+				return 0;
+		}
+	}
+	return 1;
+}
+
+void fill_sticker1(int dx, int dy) {
+	for (int i = 0; i < r; i++) {
+		for (int j = 0; j < c; j++) {
+			if (sticker[i][j] == 1)
+				notebook[dx + i][dy + j] = 1;
+		}
+	}
+}
+void fill_sticker2(int dx, int dy) {
+	for (int i = 0; i < c; i++) {
+		for (int j = r - 1; j >= 0; j--) {
+			if (sticker[j][i] == 1)
+			{
+				notebook[dx + i][dy + r - 1 - j] = 1;
+			}
+		}
+	}
+}
+
+void fill_sticker3(int dx, int dy) {
+	for (int i = r - 1; i >= 0; i--) {
+		for (int j = c - 1; j >= 0; j--) {
+			if (sticker[i][j] == 1)
+				notebook[dx + i][dy + j] = 1;
+		}
+	}
+}
+
+void fill_sticker4(int dx, int dy) {
+	for (int i = c - 1; i >= 0; i--) {
+		for (int j = 0; j < r; j++) {
+			if (sticker[j][i] == 1)
+				notebook[dx + j][dy + i] = 1;
+		}
+	}
+}
+
+void print_notebook() {
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < m; j++) {
+			cout << notebook[i][j] << ' ';
 		}
 		cout << '\n';
 	}
@@ -71,9 +120,29 @@ int main() {
 				cin >> sticker[i][j];
 			}
 		}
-		print_sticker1();
-		print_sticker2();
-		print_sticker3();
-		print_sticker4();
+		if (check_sticker1(0, 0)) {
+			cout << "fill1\n";
+			fill_sticker1(0, 0);
+			print_notebook();
+			continue;
+		}
+		if (check_sticker2(0, 2)) {
+			cout << "fill2\n";
+			fill_sticker2(0, 2);
+			print_notebook();
+			continue;
+		}
+		if (check_sticker3(0, 0)) {
+			cout << "fill3\n";
+			fill_sticker3(0, 0);
+			print_notebook();
+			continue;
+		}
+		if (check_sticker4(0, 0)) {
+			cout << "fill4\n";
+			fill_sticker4(0, 0);
+			print_notebook();
+			continue;
+		}
 	}
 }
