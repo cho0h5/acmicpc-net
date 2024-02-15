@@ -55,8 +55,8 @@ int check_sticker3(int dx, int dy) {
 int check_sticker4(int dx, int dy) {
 	for (int i = c - 1; i >= 0; i--) {
 		for (int j = 0; j < r; j++) {
-			cout << "notebookt: " << dx + c - 1 - i << ' ' << dy + j << ' ' << notebook[dx + c - 1 - i][dy + j] << '\n';
-			cout << "swicker: " <<j << ' ' << i << ' ' << sticker[j][i] << '\n';
+			// cout << "notebookt: " << dx + c - 1 - i << ' ' << dy + j << ' ' << notebook[dx + c - 1 - i][dy + j] << '\n';
+			// cout << "swicker: " <<j << ' ' << i << ' ' << sticker[j][i] << '\n';
 			if (notebook[dx + c - 1 - i][dy + j] == 1 && sticker[j][i] == 1)
 				return 0;
 		}
@@ -115,9 +115,9 @@ int fill1() {
 	for (int dx = 0; dx <= n - r; dx++) {
 		for (int dy = 0; dy <= m - c; dy++) {
 			if (check_sticker1(dx, dy)) {
-				cout << "fill1: " << r << ' ' << c << '\n';
+				// cout << "fill1: " << r << ' ' << c << '\n';
 				fill_sticker1(dx, dy);
-				print_notebook();
+				// print_notebook();
 				return 1;
 			}
 		}
@@ -130,9 +130,9 @@ int fill2() {
 		for (int dy = 0; dy <= m - r; dy++) {
 			// cout << "fill2: " << dx << ' ' << dy << '\n';
 			if (check_sticker2(dx, dy)) {
-				cout << "fill2\n";
+				// cout << "fill2\n";
 				fill_sticker2(dx, dy);
-				print_notebook();
+				// print_notebook();
 				return 1;
 			}
 		}
@@ -143,10 +143,10 @@ int fill2() {
 int fill3() {
 	for (int dx = 0; dx <= n - r; dx++) {
 		for (int dy = 0; dy <= m - c; dy++) {
-			if (check_sticker3(0, 0)) {
-				cout << "fill3\n";
-				fill_sticker3(0, 0);
-				print_notebook();
+			if (check_sticker3(dx, dy)) {
+				// cout << "fill3\n";
+				fill_sticker3(dx, dy);
+				// print_notebook();
 				return 1;
 			}
 		}
@@ -157,16 +157,26 @@ int fill3() {
 int fill4() {
 	for (int dx = 0; dx <= n - c; dx++) {
 		for (int dy = 0; dy <= m - r; dy++) {
-			cout << "fill4: " << dx << ' ' << dy << '\n';
-			if (check_sticker4(2, 0)) {
-				cout << "fill4\n";
-				fill_sticker4(2, 0);
-				print_notebook();
+			// cout << "fill4: " << dx << ' ' << dy << '\n';
+			if (check_sticker4(dx, dy)) {
+				// cout << "fill4\n";
+				fill_sticker4(dx, dy);
+				// print_notebook();
 				return 1;
 			}
 		}
 	}
 	return 0;
+}
+
+int count_notebook() {
+	int count = 0;
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < m; j++) {
+			count += notebook[i][j];
+		}
+	}
+	return count;
 }
 
 int main() {
@@ -180,10 +190,11 @@ int main() {
 				cin >> sticker[i][j];
 			}
 		}
-		cout << "target: " << r << ' ' << c << '\n';
+		// cout << "target: " << r << ' ' << c << '\n';
 		if (fill1()) continue;
 		if (fill2()) continue;
 		if (fill3()) continue;
 		if (fill4()) continue;
 	}
+	cout << count_notebook() << '\n';
 }
