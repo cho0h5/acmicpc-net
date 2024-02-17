@@ -52,7 +52,6 @@ int main() {
 	}
 	// cout << i << '\n';
 	// cout << j << '\n';
-	int l = to_string(target).size();
-	int minn = min(abs(100 - target), min(abs(i - target) + l, abs(j - target) + l));
+	int minn = min((unsigned long)abs(100 - target), min(abs(i - target) + to_string(i).size(), abs(j - target) + to_string(j).size()));
 	cout << minn << '\n';
 }
