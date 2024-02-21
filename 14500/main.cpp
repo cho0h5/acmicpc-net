@@ -74,12 +74,36 @@ void init_tets() {
 	t5.shape[1][1] = 1;
 	t5.shape[1][2] = 0;
 	tets.push_back(t5);
+
+	t_tet t6;
+	t6.h = 3;
+	t6.w = 2;
+	t6.shape[0][0] = 0;
+	t6.shape[0][1] = 1;
+	t6.shape[1][0] = 0;
+	t6.shape[1][1] = 1;
+	t6.shape[2][0] = 1;
+	t6.shape[2][1] = 1;
+	tets.push_back(t6);
+
+	t_tet t7;
+	t7.h = 3;
+	t7.w = 2;
+	t7.shape[0][0] = 0;
+	t7.shape[0][1] = 1;
+	t7.shape[1][0] = 1;
+	t7.shape[1][1] = 1;
+	t7.shape[2][0] = 1;
+	t7.shape[2][1] = 0;
+	tets.push_back(t7);
 }
 
 void print_tet(const t_tet &t) {
 	for (int i = 0; i < t.h; i++) {
 		for (int j = 0; j < t.w; j++) {
-			cout << t.shape[i][j] << ' ';
+			if (t.shape[i][j] != 0)
+				cout << t.shape[i][j] << ' ';
+			else cout << "  ";
 		}
 		cout << '\n';
 	}
@@ -87,13 +111,14 @@ void print_tet(const t_tet &t) {
 }
 
 void print_tets() {
+	cout << "--------\n";
 	for (auto i = tets.begin(); i != tets.end(); i++)
 		print_tet(*i);
+	cout << "--------\n";
 }
 
 void turn_tet(t_tet &t) {
 	int tmp_shape[4][4];
-	int tmp;
 
 	for (int i = 0; i < t.h; i++) {
 		for (int j = 0; j < t.w; j++) {
@@ -148,7 +173,7 @@ int main() {
 
 	int maxx = 0;
 	for (int a = 0; a < 4; a++) {
-		for (int b = 0; b < 5; b++) {
+		for (int b = 0; b < (int)tets.size(); b++) {
 			int ret = search(tets[b]);
 			maxx = max(maxx, ret);
 		}

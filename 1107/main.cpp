@@ -1,13 +1,6 @@
 #include <cstring>
 #include <iostream>
 #include <string>
-#include <utility>
-#include <tuple>
-#include <vector>
-#include <stack>
-#include <algorithm>
-#include <map>
-#include <set>
 
 using namespace std;
 
@@ -17,9 +10,9 @@ void fastio() {
 	cout.tie(NULL);
 }
 
-int contain(string a, string b) {
-	for (int i = 0; i < a.size(); i++) {
-		if (strchr(b.c_str(), a[i]) != NULL)
+int contain(string a, string nohave) {
+	for (auto it = a.begin(); it != a.end(); it++) {
+		if (strchr(nohave.c_str(), *it) != NULL)
 			return 1;
 	}
 	return 0;
@@ -28,30 +21,31 @@ int contain(string a, string b) {
 int main() {
 	fastio();
 	int target;
-	string nohave;
-	cin >> target;
 	int n;
-	cin >> n;
+	string nohave;
+	cin >> target >> n;
 	for (int i = 0; i < n; i++) {
-		char num;
-		cin >> num;
-		nohave.push_back(num);
+		char c;
+		cin >> c;
+		nohave.push_back(c);
 	}
 
-	int i;
+	int i, j;
 	for (i = target; i >= 0; i--) {
-		string can = to_string(i);
-		if (!contain(can, nohave))
+		if (!contain(to_string(i), nohave))
 			break;
 	}
-	int j;
-	for (j = target; j <= 1000000; j++) {
-		string can = to_string(j);
-		if (!contain(can, nohave))
+	if (i == -1) i = -10000000;
+	for (j = target; j < 1100000; j++) {
+		if (!contain(to_string(j), nohave))
 			break;
 	}
-	// cout << i << '\n';
-	// cout << j << '\n';
-	int minn = min((unsigned long)abs(100 - target), min(abs(i - target) + to_string(i).size(), abs(j - target) + to_string(j).size()));
-	cout << minn << '\n';
+
+	int x = abs(100 - target);
+	int y = abs(i - target) + to_string(i).size();
+	int z = abs(j - target) + to_string(j).size();
+//	cout << i << '\n';
+//	cout << j << '\n';
+//	cout << x << ' ' << y << ' ' << z << '\n';
+	cout << min(x, min(y, z)) << '\n';
 }
