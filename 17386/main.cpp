@@ -1,13 +1,6 @@
 #include <iostream>
 #include <utility>
-#include <tuple>
 #include <vector>
-#include <stack>
-#include <algorithm>
-#include <map>
-#include <set>
-
-#define EPSILON 0.000001
 
 using namespace std;
 
@@ -17,45 +10,40 @@ void fastio() {
 	cout.tie(NULL);
 }
 
-long long px1, py1;
-long long px2, py2;
-long long px3, py3;
-long long px4, py4;
-double r1;
-double r2;
+vector<pair<long long, long long> > points;
 
 void input() {
-	cin >> px1 >> py1;
-	cin >> px2 >> py2;
-	cin >> px3 >> py3;
-	cin >> px4 >> py4;
-	r1 = (double)(py2 - py1) / (px2 - px1);
-	r2 = (double)(py4 - py3) / (px4 - px3);
+	long long x, y;
+	cin >> x >> y;
+	points.push_back(make_pair(x, y));
 }
 
-double cross_x() {
-	return (r1 * px1 - r2 * px3 - py1 + py3) / (r1 - r2);
+long long ccw(pair<long long, long long> a, pair<long long, long long> b, pair<long long, long long> c) {
+	long long vx1 = b.first - a.first;
+	long long vy1 = b.second - a.second;
+	long long vx2 = c.first - b.first;
+	long long vy2 = c.second - b.second;
+	long long det = (vx1 * vy2) - (vy1 * vx2);
+	if (det > 0) return 1;
+	if (det < 0) return -1;
+	return 0;
 }
 
 int main() {
 	fastio();
 
 	input();
+	input();
+	input();
+	input();
 
-	if (abs(r2 - r1) < EPSILON) {
+	long long c1 = ccw(points[0], points[1], points[2]);
+	long long c2 = ccw(points[0], points[1], points[3]);
+	long long c3 = ccw(points[2], points[3], points[0]);
+	long long c4 = ccw(points[2], points[3], points[1]);
+	if (c1 * c2 < 0 && c3 * c4 < 0)
+		cout << "1\n";
+	else
 		cout << "0\n";
-		return 0;
-	}
-
-	long long cross_point = cross_x();
-
-	if (!(px1 <= cross_point && cross_point <= px2)) {
-		cout << "0\n";
-		return 0;
-	}
-	if (!(px3 <= cross_point && cross_point <= px4)) {
-		cout << "0\n";
-		return 0;
-	}
-	cout << "1\n";
+	
 }
