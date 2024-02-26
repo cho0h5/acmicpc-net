@@ -33,9 +33,9 @@ int main() {
       int px = get_parent(x);
       int py = get_parent(y);
       if (px < py)
-        parent[y] = px;
+        parent[py] = px;
       else
-        parent[x] = py;
+        parent[px] = py;
     }
     cin >> m;
     while (m--) {
