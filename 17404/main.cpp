@@ -13,10 +13,13 @@ int n;
 int cost[1000][3];
 int acc[1000][3];
 
-void down_dp() {
-	acc[0][0] = cost[0][0];
-	acc[0][1] = cost[0][1];
-	acc[0][2] = cost[0][2];
+#define INF 99999999
+
+void down_dp(int min_i) {
+	acc[0][0] = INF;
+	acc[0][1] = INF;
+	acc[0][2] = INF;
+	acc[0][min_i] = cost[0][min_i];
 
 	for (int i = 1; i < n; i++) {
 		acc[i][0] = min(acc[i - 1][1], acc[i - 1][2]) + cost[i][0];
@@ -25,7 +28,6 @@ void down_dp() {
 	}
 }
 
-#define INF 99999999
 
 void up_dp(int min_i) {
 	acc[n - 1][0] = INF;
@@ -41,6 +43,7 @@ void up_dp(int min_i) {
 }
 
 void print_acc() {
+	cout << '\n';
 	for (int i = 0; i < n; i++) {
 		cout << acc[i][0] <<' ';
 		cout << acc[i][1] <<' ';
@@ -70,19 +73,21 @@ int main() {
 		}
 	}
 
-	down_dp();
-	int min_i = get_min_index();
 	int min_cost = INF;
 	for (int i = 0; i < 3; i++) {
-		if (i != min_i)
-			min_cost = min(min_cost, acc[n - 1][i]);
-	}
-	print_acc();
-	up_dp(get_min_index());
-	print_acc();
-	for (int i = 0; i < 3; i++) {
-		if (i != min_i)
-			min_cost = min(min_cost, acc[0][i]);
+		int min_i = i;
+		down_dp(min_i);
+		for (int i = 0; i < 3; i++) {
+			if (i != min_i)
+				min_cost = min(min_cost, acc[n - 1][i]);
+		}
+		// print_acc();
+		up_dp(min_i);
+		// print_acc();
+		for (int i = 0; i < 3; i++) {
+			if (i != min_i)
+				min_cost = min(min_cost, acc[0][i]);
+		}
 	}
 	cout << min_cost << '\n';
 }
