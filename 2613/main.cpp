@@ -18,6 +18,22 @@ int subprogram(int target) {
   int sum = 0;
   int e_count = 0;
   for (int i = 0; i < n; i++) {
+    if (m - count - 1 == n - i) {
+      // cout << "ho(" << m << ' ' << count + 1 << ' ' << n << ' ' << i << ") ";
+      // cout << e_count << ' ';
+      viable.push_back(e_count);
+      max_sum = max(max_sum, sum);
+      count += 1;
+
+      for (int j = i; j < n; j++) {
+        // cout << 1 << ' ';
+        viable.push_back(1);
+        count += 1;
+      }
+      sum = 0;
+      break;
+    }
+
     if (sum + arr[i] > target) {
       // cout << e_count << ' ';
       viable.push_back(e_count);
@@ -39,12 +55,15 @@ int subprogram(int target) {
 
   if (count == m) {
     return max_sum;
-  } else {
+  } else if (count > m) {
     return -1;
+  } else {
+    return -2;
   }
 }
 
 void solution(int s, int e) {
+  // cout << "solution: " << s << ' ' << e << '\n';
   if (s > e) {
     return;
   }
@@ -54,7 +73,7 @@ void solution(int s, int e) {
   // cout << "ret: " << result << '\n';
   // cout << '\n';
 
-  if (result != -1 && result < minn) {
+  if (result != -1 && result != -2 && result < minn) {
     minn = result;
     candidate = viable;
   }
@@ -63,6 +82,8 @@ void solution(int s, int e) {
   if (s != e) {
     if (result == -1) {
       solution(mid + 1, e);
+    } else if (result == -2) {
+      solution(s, mid - 1);
     } else {
       solution(s, result - 1);
     }
