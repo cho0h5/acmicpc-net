@@ -3,6 +3,8 @@
 #include <utility>
 #include <queue>
 
+#define INF 999999999
+
 using namespace std;
 using ii = pair<int, int>;
 using iiii = tuple<int, int, int, int>;
@@ -29,14 +31,15 @@ iiii make_pq_node(const int cost_through, const int cost_near, const int x, cons
 		// cout << "wtf: " << (int)get_world(x, y) << '\n';
 	if (get_world(x, y) == 'g') {
 		additional_cost_through += 1;
-	}
-	for (int i = 0; i < 4; i++) {
-		if (get_world(x + dx[i], y + dy[i]) == 'g') {
-			additional_cost_near += 1;
+	} else {
+		for (int i = 0; i < 4; i++) {
+			if (get_world(x + dx[i], y + dy[i]) == 'g') {
+				additional_cost_near = 1;
+			}
 		}
-	}
-	if (get_world(x, y) == 'F') {
-		additional_cost_near = 0;
+		if (get_world(x, y) == 'F') {
+			additional_cost_near = 0;
+		}
 	}
 	
 	return {cost_through + additional_cost_through,
@@ -69,7 +72,7 @@ void input() {
 
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < m; j++) {
-			costs[i][j] = {999, 999};
+			costs[i][j] = {INF, INF};
 		}
 	}
 	
