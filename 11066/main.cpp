@@ -1,6 +1,6 @@
 #include <iostream>
 
-#define MAXIMUM 21474
+#define MAXIMUM 2147483637
 
 using namespace std;
 
@@ -9,10 +9,10 @@ int costs[500];
 int k;
 
 int get_cost(const int x, const int y) {
-	if (x == y) {
-		return costs[x];
+	if (x == 0) {
+		return costs[y];
 	}
-	return dp[x][y];
+	return costs[y] - costs[x - 1];
 }
 
 void print_dp() {
@@ -39,7 +39,7 @@ int sol() {
 		// cout << '\n';
 	}
 
-	print_dp();
+	// print_dp();
 
 	return dp[0][k - 1];
 }
@@ -58,10 +58,12 @@ int main() {
 				dp[i][j] = MAXIMUM;
 			}
 		}
-		cout << dp[0][1] << '\n';
 		for (int i = 0; i < k; i++) {
 			dp[i][i] = 0;
 			cin >> costs[i];
+			if (i != 0) {
+				costs[i] += costs[i - 1];
+			}
 		}
 		cout << sol() << '\n';
 	}
