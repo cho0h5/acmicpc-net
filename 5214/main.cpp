@@ -63,5 +63,9 @@ int main() {
     cout.tie(NULL);
 
     input();
+    if (n == 1) {
+        cout << "1\n";
+        return 0;
+    }
     cout << sol() << '\n';
 }
