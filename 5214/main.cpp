@@ -7,6 +7,7 @@ using namespace std;
 
 int n, k, m;
 vector<unordered_set<int>> hs;
+vector<unordered_set<int>> is;
 
 int sol() {
     unordered_set<int> vst;
@@ -26,14 +27,12 @@ int sol() {
             return -curr_cost;
         }
 
-        for (int i = 0; i < hs.size(); i++) {
-            if (hs[i].empty()) continue;
-            if (vst.find(i) == vst.end()) {
-                for (auto &next_index: hs[curr_hiper]) {
-                    if (hs[i].find(next_index) != hs[i].end()) {
-                        vst.insert(i);
-                        pq.push({next_cost, i});
-                    }
+        for (auto &next_index: hs[curr_hiper]) {
+            for (auto &next_hiper: is[next_index]) {
+                if (hs[next_hiper].empty()) continue;
+                if (vst.find(next_hiper) == vst.end()) {
+                    vst.insert(next_hiper);
+                    pq.push({next_cost, next_hiper});
                 }
             }
         }
@@ -45,12 +44,14 @@ int sol() {
 
 void input() {
     cin >> n >> k >> m;
+    is.assign(n + 1, unordered_set<int>());
     for (int i = 0; i < m; i++) {
         unordered_set<int> h;
         for (int j = 0; j < k; j++) {
             int x;
             cin >> x;
             h.insert(x);
+            is[x].insert(i);
         }
         hs.push_back(h);
     }
