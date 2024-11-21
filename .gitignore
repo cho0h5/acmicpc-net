@@ -25,3 +25,5 @@ a.out.dSYM/
 main.dSYM/
 
 .idea/
+
+*.swp
