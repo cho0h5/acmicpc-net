@@ -1,85 +1,56 @@
 #include <iostream>
 #include <vector>
+#include <utility>
 
 using namespace std;
 
 int t, n;
-vector<int> ns;
-int i, j;
+int ns[1000];
+pair<int, int> dp[1000][1000];
 
-int ns_size() {
-    return j - i + 1;
-}
-
-char which_is_better() {
-    if (ns_size() <= 2) {
-        const int l = ns[i];
-        const int r = ns[j];
-
-        if (l > r) {
-            return 'l';
-        } else {
-            return 'r';
+void print_dp() {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cout << "(" << dp[i][j].first << ", " << dp[i][j].second << ")" << '\t';
         }
-    } else {
-        int l = ns[i];
-        if (ns[i + 1] >= ns[j]) {
-            l += max(ns[i + 2], ns[j]);
-        } else {
-            l += max(ns[i + 1], ns[j - 1]);
-        }
-
-        int r = ns[j];
-        if (ns[i] >= ns[j - 1]) {
-            r += max(ns[i + 1], ns[j - 1]);
-        } else {
-            r += max(ns[i], ns[j - 2]);
-        }
-
-        // cout << l << ' ' << r << '\n';
-        if (l == r) {
-            // cout << ns[i] << ' ' << ns[j] << '\n';
-            if (ns[i] >= ns[j]) {
-                return 'l';
-            } else {
-                return 'r';
-            }
-        } else if (l > r) {
-            return 'l';
-        } else {
-            return 'r';
-        }
+        cout << '\n';
     }
 }
 
 int sol() {
-    int sum_g = 0;
-    char turn = 'g';
-    while (ns_size()) {
-        const char which = which_is_better();
-
-        if (turn == 'g') {
-            if (which == 'l') {
-                // cout << "debug_g: " << ns[i] << '\n';
-                sum_g += ns[i];
+    for (int c = 1; c < n; c++) {
+        for (int r = c - 1; r >= 0; r--) {
+            char turn;
+            if ((c - r) % 2 != n % 2) {
+                turn = 'g';
             } else {
-                // cout << "debug_g: " << ns[j] << '\n';
-                sum_g += ns[j];
+                turn = 'm';
             }
-            turn = 'm';
-        } else {
-            // cout << "debug_m: " << ns[j] << '\n';
-            turn = 'g';
-        }
 
-        if (which == 'l') {
-            i += 1;
-        } else {
-            j -= 1;
+            if (turn == 'g') {
+                const int c1 = dp[r][c - 1].first + ns[c];
+                const int c2 = dp[r + 1][c].first + ns[r];
+
+                if (c1 > c2) {
+                    dp[r][c] = {c1, dp[r][c - 1].second};
+                } else {
+                    dp[r][c] = {c2, dp[r + 1][c].second};
+                }
+            } else {
+                const int c1 = dp[r][c - 1].second + ns[c];
+                const int c2 = dp[r + 1][c].second + ns[r];
+
+                if (c1 > c2) {
+                    dp[r][c] = {dp[r][c - 1].first, c1};
+                } else {
+                    dp[r][c] = {dp[r + 1][c].first, c2};
+                }
+            }
         }
-        // cout << ns_size() << '\n';
     }
-    return sum_g;
+    // cout << "a: " << dp[0][n - 1].first << '\n';
+    // cout << "b: " << dp[0][n - 1].second << '\n';
+    return dp[0][n - 1].first;
 }
 
 int main() {
@@ -88,14 +59,17 @@ int main() {
 	cout.tie(NULL);
 
     cin >> t;
-    for (int I = 0; I < t; I++) {
+    for (int i = 0; i < t; i++) {
         cin >> n;
-        i = 0;
-        j = n - 1;
-        ns.assign(n, 0);
-        for (int J = 0; J < n; J++) {
-            cin >> ns[J];
+        for (int j = 0; j < n; j++) {
+            cin >> ns[j];
+            if (n % 2 == 0) {
+                dp[j][j] = {0, ns[j]};
+            } else {
+                dp[j][j] = {ns[j], 0};
+            }
         }
         cout << sol() << '\n';
+        // print_dp();
     }
 }
