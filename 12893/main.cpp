@@ -5,7 +5,7 @@ using namespace std;
 
 class UnionFind {
     public:
-        UnionFind(const int n) {
+        UnionFind(const int n) : n(n) {
             parents.resize(n + 1);
             for (int i = 0; i < n + 1; i++) {
                 parents[i] = i;
@@ -29,20 +29,24 @@ class UnionFind {
             }
 
             parents[pa] = pb;
+            n -= 1;
             return true;
         }
 
     private:
         vector<int> parents;
+        int n;
 };
 
 int main() {
-    UnionFind uf(10);
+    int n, m;
+    cin >> n >> m;
+    UnionFind uf(n);
 
-    cout << uf.merge(5, 6) << '\n';
-    cout << uf.merge(4, 5) << '\n';
-    cout << uf.merge(6, 7) << '\n';
-    cout << uf.merge(4, 7) << '\n';
+    for (int i = 0; i < m; i++) {
+        int a, b;
+        cin >> a >> b;
+    }
 
     return 0;
 }
