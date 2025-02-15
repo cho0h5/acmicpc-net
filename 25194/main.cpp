@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <unordered_set>
 
 using namespace std;
 
@@ -8,21 +7,27 @@ int n;
 vector<int> as;
 
 bool sol() {
-    unordered_set<int> s;
-    s.insert(0);
+    bool s[7];
+    for (int i = 0; i < 7; i++) {
+        s[i] = false;
+    }
+    s[0] = true;
 
     for (int i = 0; i < n; i++) {
         vector<int> t;
-        for (auto &it: s) {
-            const int a = it + as[i];
-            if (a % 7 == 4) {
+        for (int j = 0; j < 7; j++) {
+            if (!s[j]) {
+                continue;
+            }
+            const int a = (j + as[i]) % 7;
+            if (a == 4) {
                 return true;
             }
             t.push_back(a);
         }
 
         for (auto &it: t) {
-            s.insert(it);
+            s[it] = true;
         }
     }
     return false;
