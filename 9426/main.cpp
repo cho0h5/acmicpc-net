@@ -1,8 +1,8 @@
 #include <iostream>
 #include <vector>
 
-// #define SEGTREE_SIZE 65536
-#define SEGTREE_SIZE 16
+#define SEGTREE_SIZE 65537
+// #define SEGTREE_SIZE 16
 
 using namespace std;
 
@@ -10,12 +10,6 @@ int n, k;
 vector<int> temps;
 
 int segtree[SEGTREE_SIZE << 2];
-
-void init() {
-    for (int i = 0; i < (SEGTREE_SIZE << 2); i++) {
-        segtree[i] = 0;
-    }
-}
 
 void update(const int node, const int s, const int e, const int i, const int x) {
     // 범위가 전혀 벗어나면 나가리
@@ -55,28 +49,48 @@ void print_segtree(const int node, const int s, const int e, const int step) {
     }
 }
 
-int sol() {
+int search_median(const int node, const int s, const int e, const int offset, const int target) {
+    if (s == e) {
+        return s - 1;
+    }
+
+    const int left = node * 2;
+    const int right = left + 1;
+    const int mid = (s + e) / 2;
+    const int left_value = segtree[left];
+
+    if (target <= offset + left_value) {
+        return search_median(left, s, mid, offset, target);
+    } else {
+        return search_median(right, mid + 1, e, offset + left_value, target);
+    }
+}
+
+long long sol() {
     for (int i = 0; i < k; i++) {
         update(1, 1, SEGTREE_SIZE, temps[i] + 1, 1);
     }
 
+    long long sumation = 0;
     for (int i = 0; i < n - k; i++) {
-        print_segtree(1, 1, SEGTREE_SIZE, 0);
-        cout << "--------\n";
+        // print_segtree(1, 1, SEGTREE_SIZE, 0);
+        // cout << "median: " << search_median(1, 1, SEGTREE_SIZE, 0, (k + 1) / 2) << '\n';
+        sumation +=  search_median(1, 1, SEGTREE_SIZE, 0, (k + 1) / 2);
+        // cout << "--------\n";
 
         update(1, 1, SEGTREE_SIZE, temps[i] + 1, -1);
         update(1, 1, SEGTREE_SIZE, temps[i + k] + 1, 1);
     }
 
-    print_segtree(1, 1, SEGTREE_SIZE, 0);
-    cout << "--------\n";
+    // print_segtree(1, 1, SEGTREE_SIZE, 0);
+    // cout << "median: " << search_median(1, 1, SEGTREE_SIZE, 0, (k + 1) / 2) << '\n';
+    sumation +=  search_median(1, 1, SEGTREE_SIZE, 0, (k + 1) / 2);
+    // cout << "--------\n";
 
-
-    return -1;
+    return sumation;
 }
 
 int main() {
-    init();
     cin >> n >> k;
     temps.resize(n);
     for (int i = 0; i < n; i++) {
