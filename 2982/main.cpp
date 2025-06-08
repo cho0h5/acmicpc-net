@@ -11,7 +11,6 @@ int a, b, k, g;
 vector<int> gs;
 vector<pair<int, int>> gs2;
 vector<pair<int, int>> graph[1001];
-unordered_map<int, int> graph2[1001];
 
 pair<int, int> where_use(int time, int *until) {
     time += 1;
@@ -97,8 +96,6 @@ int main() {
         cin >> p >> q >> r;
         graph[p].push_back({q, r});
         graph[q].push_back({p, r});
-        graph2[p].insert({q, r});
-        graph2[q].insert({p, r});
     }
 
     // Init gs2
@@ -106,7 +103,11 @@ int main() {
         int time = -k;
         gs2.push_back({time, gs[0]});
         for (int i = 1; i < gs.size(); i++) {
-            time += graph2[gs[i - 1]][gs[i]];
+            sort(graph[gs[i - 1]].begin(), graph[gs[i - 1]].end());
+            pair<int, int> key = {gs[i], 0};
+            const auto &it = lower_bound(graph[gs[i - 1]].begin(), graph[gs[i - 1]].end(), key);
+
+            time += it->second;
             gs2.push_back({time, gs[i]});
         }
     }
