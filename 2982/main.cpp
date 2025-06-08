@@ -40,24 +40,12 @@ pair<int, int> where_use(int time, int *until) {
     return {gn, gp};
 }
 
-bool is_used(int cc, int cn, int nn, int *gc) {
-    const pair<int, int> key = {cc, 0};
-    auto iq = upper_bound(gs2.begin(), gs2.end(), key);
-    auto ip = iq;
-    ip--;
-    if (iq == gs2.end()) {
-        return false;
+bool is_used(pair<int, int> p, int a, int b) {
+    if (a > b) {
+        swap(a, b);
     }
 
-    *gc = iq->first;
-    int gn = iq->second;
-    int gp = ip->second;
-
-    if (nn == gn && cn == gp) {
-        return true;
-    } else {
-        return false;
-    };
+    return (p.first == a && p.second == b);
 }
 
 int dijkstra() {
@@ -68,6 +56,7 @@ int dijkstra() {
         int cc, cn;
         tie(cc, cn) = q.top();
         q.pop();
+        // cout << "cc: " << cc << " cn: " << cn << '\n';
 
         if (cn == b) {
             return cc;
@@ -77,9 +66,11 @@ int dijkstra() {
             int nn = it.first;
             int nc = cc + it.second;
 
-            int gc;
-            if (is_used(cc, cn, nn, &gc)) {
-                q.push({nc + (gc - nc), nn});
+            int until;
+            auto where = where_use(cc, &until);
+
+            if (is_used(where, cn, nn)) {
+                q.push({nc + (until - cc), nn});
             } else {
                 q.push({nc, nn});
             }
@@ -118,13 +109,6 @@ int main() {
             time += graph2[gs[i - 1]][gs[i]];
             gs2.push_back({time, gs[i]});
         }
-    }
-
-    for (int i = -20; i < 30; i++) {
-        cout << i << ": ";
-        int until;
-        auto p = where_use(i, &until);
-        cout << p.first << ' ' << p.second << ' ' << until << '\n';
     }
 
     cout << dijkstra() << '\n';
