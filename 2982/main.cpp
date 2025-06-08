@@ -13,6 +13,22 @@ vector<pair<int, int>> gs2;
 vector<pair<int, int>> graph[1001];
 unordered_map<int, int> graph2[1001];
 
+bool is_used(int cc, int nn, int *gc) {
+    const pair<int, int> key = {cc, 0};
+    auto iq = upper_bound(gs2.begin(), gs2.end(), key);
+    if (iq == gs2.end()) {
+        return false;
+    }
+    *gc = iq->first;
+    int gn = iq->second;
+
+    if (nn == gn) {
+        return true;
+    } else {
+        return false;
+    };
+}
+
 int dijkstra() {
     priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> q;
     q.push({0, a});
@@ -30,16 +46,8 @@ int dijkstra() {
             int nn = it.first;
             int nc = cc + it.second;
 
-            const pair<int, int> key = {cc, 0};
-            auto iq = upper_bound(gs2.begin(), gs2.end(), key);
-            if (iq == gs2.end()) {
-                q.push({nc, nn});
-                continue;
-            }
-            int gc = iq->first;
-            int gn = iq->second;
-
-            if (nn == gn) {
+            int gc;
+            if (is_used(cc, nn, &gc)) {
                 q.push({nc + (gc - nc), nn});
             } else {
                 q.push({nc, nn});
