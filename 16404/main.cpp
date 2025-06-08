@@ -4,49 +4,19 @@
 using namespace std;
 
 int n, m;
-int parent[100001];
 vector<int> children[100001];
-vector<int> paths[100001];
-int state[100001];
-int lazy[100001];
+int s_id[100001];
+int e_id[100001];
+int next_id = 1;
 
-void set(const int node, const int x) {
-    state[node] += x;
+void dfs(const int node) {
+    s_id[node] = next_id++;
 
     for (auto &c: children[node]) {
-        lazy[c] += x;
-    }
-}
-
-int get(const int node) {
-    // Find path
-    vector<int> path;
-
-    if (paths[node].empty()) {
-        int n = node;
-        while (n != -1) {
-            path.push_back(n);
-            n = parent[n];
-        }
-    } else {
-        path = paths[node];
+        dfs(c);
     }
 
-    // Update lazy
-    for (int i = path.size() - 1; i >= 0; i--) {
-        const int node = path[i];
-
-        state[node] += lazy[node];
-
-        for (auto &c: children[node]) {
-            lazy[c] += lazy[node];
-        }
-
-        lazy[node] = 0;
-    }
-
-    // Return
-    return state[node];
+    e_id[node] = next_id - 1;
 }
 
 int main() {
@@ -56,24 +26,31 @@ int main() {
 
     cin >> n >> m;
 
+    int parent;
+    cin >> parent;
+    for (int i = 2; i <= n; i++) {
+        cin >> parent;
+        children[parent].push_back(i);
+    }
+
+    // Re-assign id
+    dfs(1);
+
     for (int i = 1; i <= n; i++) {
-        cin >> parent[i];
-
-        if (i != 1) {
-            children[parent[i]].push_back(i);
-        }
+        cout << s_id[i] << ' ' << e_id[i] << ", ";
     }
+    cout << '\n';
 
-    for (int i = 0; i < m; i++) {
-        int a, b, c;
-        cin >> a;
-
-        if (a == 1) {
-            cin >> b >> c;
-            set(b, c);
-        } else {
-            cin >> b;
-            cout << get(b) << '\n';
-        }
-    }
+//     for (int i = 0; i < m; i++) {
+//         int a, b, c;
+//         cin >> a;
+// 
+//         if (a == 1) {
+//             cin >> b >> c;
+//             set(b, c);
+//         } else {
+//             cin >> b;
+//             cout << get(b) << '\n';
+//         }
+//     }
 }
