@@ -13,6 +13,32 @@ vector<pair<int, int>> gs2;
 vector<pair<int, int>> graph[1001];
 unordered_map<int, int> graph2[1001];
 
+pair<int, int> where_use(int time) {
+    time += 1;
+
+    const pair<int, int> key = {time, 0};
+    auto iq = upper_bound(gs2.begin(), gs2.end(), key);
+
+    if (iq == gs2.end()) {
+        return {-1, -1};
+    }
+
+    int gn = iq->second;
+
+    if (iq == gs2.begin()) {
+        return {-1, -1};
+    }
+
+    auto ip = iq;
+    ip--;
+    int gp = ip->second;
+
+    if (gn > gp) {
+        swap(gn, gp);
+    }
+    return {gn, gp};
+}
+
 bool is_used(int cc, int cn, int nn, int *gc) {
     const pair<int, int> key = {cc, 0};
     auto iq = upper_bound(gs2.begin(), gs2.end(), key);
