@@ -13,7 +13,7 @@ vector<pair<int, int>> gs2;
 vector<pair<int, int>> graph[1001];
 unordered_map<int, int> graph2[1001];
 
-pair<int, int> where_use(int time) {
+pair<int, int> where_use(int time, int *until) {
     time += 1;
 
     const pair<int, int> key = {time, 0};
@@ -23,6 +23,7 @@ pair<int, int> where_use(int time) {
         return {-1, -1};
     }
 
+    *until = iq->first - 1;
     int gn = iq->second;
 
     if (iq == gs2.begin()) {
@@ -117,6 +118,13 @@ int main() {
             time += graph2[gs[i - 1]][gs[i]];
             gs2.push_back({time, gs[i]});
         }
+    }
+
+    for (int i = -20; i < 30; i++) {
+        cout << i << ": ";
+        int until;
+        auto p = where_use(i, &until);
+        cout << p.first << ' ' << p.second << ' ' << until << '\n';
     }
 
     cout << dijkstra() << '\n';
