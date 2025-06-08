@@ -13,16 +13,20 @@ vector<pair<int, int>> gs2;
 vector<pair<int, int>> graph[1001];
 unordered_map<int, int> graph2[1001];
 
-bool is_used(int cc, int nn, int *gc) {
+bool is_used(int cc, int cn, int nn, int *gc) {
     const pair<int, int> key = {cc, 0};
     auto iq = upper_bound(gs2.begin(), gs2.end(), key);
+    auto ip = iq;
+    ip--;
     if (iq == gs2.end()) {
         return false;
     }
+
     *gc = iq->first;
     int gn = iq->second;
+    int gp = ip->second;
 
-    if (nn == gn) {
+    if (nn == gn && cn == gp) {
         return true;
     } else {
         return false;
@@ -47,7 +51,7 @@ int dijkstra() {
             int nc = cc + it.second;
 
             int gc;
-            if (is_used(cc, nn, &gc)) {
+            if (is_used(cc, cn, nn, &gc)) {
                 q.push({nc + (gc - nc), nn});
             } else {
                 q.push({nc, nn});
