@@ -70,7 +70,7 @@ int dijkstra() {
             auto where = where_use(cc, &until);
 
             if (is_used(where, cn, nn)) {
-                q.push({nc + (until - cc), nn});
+                q.push({nc + (until - cc) + 1, nn});
             } else {
                 q.push({nc, nn});
             }
