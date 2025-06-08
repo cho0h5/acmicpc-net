@@ -6,6 +6,7 @@ using namespace std;
 int n, m;
 int parent[100001];
 vector<int> children[100001];
+vector<int> paths[100001];
 int state[100001];
 int lazy[100001];
 
@@ -20,10 +21,15 @@ void set(const int node, const int x) {
 int get(const int node) {
     // Find path
     vector<int> path;
-    int n = node;
-    while (n != -1) {
-        path.push_back(n);
-        n = parent[n];
+
+    if (paths[node].empty()) {
+        int n = node;
+        while (n != -1) {
+            path.push_back(n);
+            n = parent[n];
+        }
+    } else {
+        path = paths[node];
     }
 
     // Update lazy
