@@ -11,6 +11,7 @@ int a, b, k, g;
 vector<int> gs;
 vector<pair<int, int>> gs2;
 vector<pair<int, int>> graph[1001];
+int vst[1001];
 
 pair<int, int> where_use(int time, int *until) {
     time += 1;
@@ -56,6 +57,11 @@ int dijkstra() {
         tie(cc, cn) = q.top();
         q.pop();
         // cout << "cc: " << cc << " cn: " << cn << '\n';
+        
+        if (vst[cn]) {
+            continue;
+        }
+        vst[cn] = 1;
 
         if (cn == b) {
             return cc;
