@@ -5,13 +5,14 @@
 #include <queue>
 
 using namespace std;
+using ii = pair<int, int>;
 
 int n, m;
 int a, b, k, g;
 vector<int> gs;
 vector<pair<int, int>> gs2;
 vector<pair<int, int>> graph[1001];
-int vst[1001];
+int cost[1001];
 
 pair<int, int> where_use(int time, int *until) {
     time += 1;
@@ -40,32 +41,13 @@ pair<int, int> where_use(int time, int *until) {
     return {gn, gp};
 }
 
-bool is_used(pair<int, int> p, int a, int b) {
-    if (a > b) {
-        swap(a, b);
-    }
-
-    return (p.first == a && p.second == b);
-}
-
-int dijkstra() {
-    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> q;
+void dijkstra() {
+    fill(cost, cost + 1001, 1e9);
+    priority_queue<ii, vector<ii>, greater<ii>> q;
     q.push({0, a});
 
     while (q.size()) {
-        int cc, cn;
-        tie(cc, cn) = q.top();
-        q.pop();
-        // cout << "cc: " << cc << " cn: " << cn << '\n';
-        
-        if (vst[cn]) {
-            continue;
-        }
-        vst[cn] = 1;
-
-        if (cn == b) {
-            return cc;
-        }
+        auto [cc, cn] = q.top(); q.pop();
 
         for (auto &it: graph[cn]) {
             int nn = it.first;
@@ -74,15 +56,17 @@ int dijkstra() {
             int until;
             auto where = where_use(cc, &until);
 
-            if (is_used(where, cn, nn)) {
-                q.push({nc + (until - cc) + 1, nn});
-            } else {
-                q.push({nc, nn});
+            int tmp = 0;
+            if ((where.first == cn && where.second == nn) || (where.first == nn && where.second == cn)) {
+                tmp = until - cc + 1;
             }
+
+            if (cost[nn] <= nc + tmp) continue;
+
+            cost[nn] = nc + tmp;
+            q.push({nc + tmp, nn});
         }
     }
-
-    return -1;
 }
 
 int main() {
@@ -118,7 +102,8 @@ int main() {
         }
     }
 
-    cout << dijkstra() << '\n';
+    dijkstra();
+    cout << cost[b] << '\n';
 
     return 0;
 }
