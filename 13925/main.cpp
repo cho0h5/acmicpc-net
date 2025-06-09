@@ -149,6 +149,24 @@ int retreive(int node, int s, int e, int i, int j) {
     return retreive(node * 2, s, mid, i, j) + retreive(node * 2 + 1, mid + 1, e, i, j);
 }
 
+void print(int node, int s, int e, int step) {
+    for (int i = 0; i < step; i ++) {
+        cout << "  ";
+    }
+    cout << state[node] << " (+";
+    cout << lazy_add[node] << ", *";
+    cout << lazy_mul[node] << ", =";
+    cout << lazy_ovr[node] << ")\n";
+
+    if (s == e) {
+        return;
+    }
+
+    int mid = (s + e) >> 1;
+    print(node * 2, s, mid, step + 1);
+    print(node * 2 + 1, mid + 1, e, step + 1);
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
 	cin.tie(NULL);
@@ -178,6 +196,9 @@ int main() {
             cin >> b >> c;
             cout << retreive(1, 1, n, b, c) << '\n';
         }
+
+        print(1, 1, n, 0);
+        cout << '\n';
     }
 
     return 0;
