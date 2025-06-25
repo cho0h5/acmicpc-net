@@ -17,11 +17,17 @@ bool solve() {
             }
         }
 
+//        cout << "state:\n";
+//        for (auto &kv: NS) {
+//            cout << kv.first << ' ' << kv.second << '\n';
+//        }
+
         // cout << "min_val: " << min_val << '\n';
         // cout << "min_pos: " << min_pos << '\n';
 
         for (int j = min_val; j <= N; j++) {
-            if (NS[j] >= min_pos) {
+            if (NS.find(j) != NS.end() && NS[j] >= min_pos) {
+                min_pos = NS[j];
                 NS.erase(j);
             }
         }
@@ -36,6 +42,10 @@ bool solve() {
 }
 
 int main() {
+    ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+
     cin >> N >> K;
 
     for (int i = 0; i < N; i++) {
