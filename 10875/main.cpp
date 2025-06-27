@@ -87,6 +87,60 @@ void construct_boxes() {
     boxes[N][4] = dir;
 }
 
+bool is_collision(const int i, const int j) {
+    return false;
+}
+
+bool is_out(const int i, int &dt) {
+    const int x_max = max(boxes[i][0], boxes[i][2]);
+    const int y_max = max(boxes[i][1], boxes[i][3]);
+    const int x_min = min(boxes[i][0], boxes[i][2]);
+    const int y_min = min(boxes[i][1], boxes[i][3]);
+
+    const int w = abs(boxes[i][2] - boxes[i][0]);
+    const int h = abs(boxes[i][3] - boxes[i][1]);
+
+    if (x_max > L) {
+        dt = x_max - L;
+        dt = w - dt;
+        return true;
+    }
+    if (y_max > L) {
+        dt = y_max - L;
+        dt = h - dt;
+        return true;
+    }
+    if (x_min < -L) {
+        dt = -L - x_min;
+        dt = w - dt;
+        return true;
+    }
+    if (y_min < -L) {
+        dt = -L - y_min;
+        dt = h - dt;
+        return true;
+    }
+
+    return false;
+}
+
+void solve() {
+    for (int i = 0; i <= N; i++) {
+        for (int j = 0; j < i; j++) {
+            if (is_collision(i, j)) {
+                printf("collision: %d, %d\n", i, j);
+                return;
+            }
+        }
+
+        int dt;
+        if (is_out(i, dt)) {
+            printf("out: %d (%d)\n", i, dt);
+            return;
+        }
+    }
+}
+
 int main() {
     cin >> L >> N;
     for (int i = 0; i < N; i++) {
@@ -103,4 +157,6 @@ int main() {
         cout << boxes[i][4] << ' ';
         cout << '\n';
     }
+
+    solve();
 }
