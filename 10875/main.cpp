@@ -184,22 +184,27 @@ bool is_out(const int i, int &dt) {
     return false;
 }
 
-void solve() {
+int solve() {
+    int cumulated = 0;
+
     for (int i = 0; i <= N; i++) {
         for (int j = 0; j < i; j++) {
             int dt;
             if (is_collision(i, j, dt)) {
                 printf("collision: %d, %d (%d)\n", i, j, dt);
-                return;
+                return cumulated + dt;
             }
         }
 
         int dt;
         if (is_out(i, dt)) {
-            printf("out: %d (%d)\n", i, dt);
-            return;
+            return cumulated + dt;
         }
+
+        cumulated += ts[i];
     }
+
+    return -1;
 }
 
 int main() {
@@ -210,14 +215,15 @@ int main() {
 
     construct_boxes();
 
-    for (int i = 0; i <= N; i++) {
-        cout << boxes[i][0] << ' ';
-        cout << boxes[i][1] << ' ';
-        cout << boxes[i][2] << ' ';
-        cout << boxes[i][3] << ' ';
-        cout << boxes[i][4] << ' ';
-        cout << '\n';
-    }
+//    for (int i = 0; i <= N; i++) {
+//        cout << boxes[i][0] << ' ';
+//        cout << boxes[i][1] << ' ';
+//        cout << boxes[i][2] << ' ';
+//        cout << boxes[i][3] << ' ';
+//        cout << boxes[i][4] << ' ';
+//        cout << '\n';
+//    }
 
-    solve();
+    const int res = solve();
+    cout << res << '\n';
 }
