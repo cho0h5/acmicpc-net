@@ -206,12 +206,20 @@ int solve() {
     int cumulated = 0;
 
     for (int i = 0; i <= N; i++) {
+        bool flag = false;
+        int mmmin = 200000000;
+
         for (int j = 0; j < i; j++) {
             int dt;
             if (is_collision(i, j, dt)) {
                 // printf("coll: %d, %d (%d)\n", i, j, dt);
-                return cumulated + dt;
+                mmmin = min(mmmin, dt);
+                flag = true;
             }
+        }
+
+        if (flag) {
+            return cumulated + mmmin;
         }
 
         int dt;
