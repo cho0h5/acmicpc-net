@@ -2,10 +2,10 @@
 
 using namespace std;
 
-int L, N;
-int ts[1000];
+long L, N;
+long ts[1000];
 char dirs[1000];
-int boxes[1001][5]; // x1, y1, x2, y2, dir
+long boxes[1001][5]; // x1, y1, x2, y2, dir
 
 void construct_boxes() {
     int dir = 0;    // > ^ < v
@@ -87,28 +87,28 @@ void construct_boxes() {
     boxes[N][4] = dir;
 }
 
-bool is_collision(const int i, const int j, int &dt) {
+bool is_collision(const int i, const int j, long &dt) {
     bool flag = false;
-    int *box_i = boxes[i];
-    int *box_j = boxes[j];
+    long *box_i = boxes[i];
+    long *box_j = boxes[j];
 
     if (box_i[4] % 2 == 0 && box_j[4] % 2 == 0 && box_i[1] == box_j[1]) {
-        int i_min = min(box_i[0], box_i[2]);
-        int i_max = max(box_i[0], box_i[2]);
-        int j_min = min(box_j[0], box_j[2]);
-        int j_max = max(box_j[0], box_j[2]);
+        long i_min = min(box_i[0], box_i[2]);
+        long i_max = max(box_i[0], box_i[2]);
+        long j_min = min(box_j[0], box_j[2]);
+        long j_max = max(box_j[0], box_j[2]);
 
         if (i_max < j_min || j_max < i_min) {
             return false;
         } else {
-            const int coll_right = min(i_max, j_max);
-            const int coll_left = max(i_min, j_min);
+            const long coll_right = min(i_max, j_max);
+            const long coll_left = max(i_min, j_min);
 
             if (box_i[0] == coll_left || box_i[0] == coll_right) {
                 dt = 0;
             } else {
-                const int candi1 = abs(box_i[0] - coll_left);
-                const int candi2 = abs(box_i[0] - coll_right);
+                const long candi1 = abs(box_i[0] - coll_left);
+                const long candi2 = abs(box_i[0] - coll_right);
                 dt = min(candi1, candi2);
             }
             return true;
@@ -116,22 +116,22 @@ bool is_collision(const int i, const int j, int &dt) {
     }
 
     if (box_i[4] % 2 == 1 && box_j[4] % 2 == 1 && box_i[0] == box_j[0]) {
-        int i_min = min(box_i[1], box_i[3]);
-        int i_max = max(box_i[1], box_i[3]);
-        int j_min = min(box_j[1], box_j[3]);
-        int j_max = max(box_j[1], box_j[3]);
+        long i_min = min(box_i[1], box_i[3]);
+        long i_max = max(box_i[1], box_i[3]);
+        long j_min = min(box_j[1], box_j[3]);
+        long j_max = max(box_j[1], box_j[3]);
 
         if (i_max < j_min || j_max < i_min) {
             return false;
         } else {
-            const int coll_up = min(i_max, j_max);
-            const int coll_down = max(i_min, j_min);
+            const long coll_up = min(i_max, j_max);
+            const long coll_down = max(i_min, j_min);
 
             if (box_i[1] == coll_up || box_i[1] == coll_down) {
                 dt = 0;
             } else {
-                const int candi1 = abs(box_i[1] - coll_up);
-                const int candi2 = abs(box_i[1] - coll_down);
+                const long candi1 = abs(box_i[1] - coll_up);
+                const long candi2 = abs(box_i[1] - coll_down);
                 dt = min(candi1, candi2);
             }
             return true;
@@ -139,10 +139,10 @@ bool is_collision(const int i, const int j, int &dt) {
     }
 
     if (box_i[4] % 2 == 0) {    // i: hor, j: ver
-        int i_x_min = min(box_i[0], box_i[2]);
-        int i_x_max = max(box_i[0], box_i[2]);
-        int j_y_min = min(box_j[1], box_j[3]);
-        int j_y_max = max(box_j[1], box_j[3]);
+        long i_x_min = min(box_i[0], box_i[2]);
+        long i_x_max = max(box_i[0], box_i[2]);
+        long j_y_min = min(box_j[1], box_j[3]);
+        long j_y_max = max(box_j[1], box_j[3]);
 
         if (i_x_min <= box_j[0] && box_j[0] <= i_x_max
                 && j_y_min <= box_i[1] && box_i[1] <= j_y_max) {
@@ -152,10 +152,10 @@ bool is_collision(const int i, const int j, int &dt) {
             return false;
         }
     } else {                    // i: ver, j: hor
-        int i_y_min = min(box_i[1], box_i[3]);
-        int i_y_max = max(box_i[1], box_i[3]);
-        int j_x_min = min(box_j[0], box_j[2]);
-        int j_x_max = max(box_j[0], box_j[2]);
+        long i_y_min = min(box_i[1], box_i[3]);
+        long i_y_max = max(box_i[1], box_i[3]);
+        long j_x_min = min(box_j[0], box_j[2]);
+        long j_x_max = max(box_j[0], box_j[2]);
 
         if (i_y_min <= box_j[1] && box_j[1] <= i_y_max
                 && j_x_min <= box_i[0] && box_i[0] <= j_x_max) {
@@ -169,14 +169,14 @@ bool is_collision(const int i, const int j, int &dt) {
     return false;
 }
 
-bool is_out(const int i, int &dt) {
-    const int x_max = max(boxes[i][0], boxes[i][2]);
-    const int y_max = max(boxes[i][1], boxes[i][3]);
-    const int x_min = min(boxes[i][0], boxes[i][2]);
-    const int y_min = min(boxes[i][1], boxes[i][3]);
+bool is_out(const int i, long &dt) {
+    const long x_max = max(boxes[i][0], boxes[i][2]);
+    const long y_max = max(boxes[i][1], boxes[i][3]);
+    const long x_min = min(boxes[i][0], boxes[i][2]);
+    const long y_min = min(boxes[i][1], boxes[i][3]);
 
-    const int w = abs(boxes[i][2] - boxes[i][0]) + 1;
-    const int h = abs(boxes[i][3] - boxes[i][1]) + 1;
+    const long w = abs(boxes[i][2] - boxes[i][0]) + 1;
+    const long h = abs(boxes[i][3] - boxes[i][1]) + 1;
 
     if (x_max > L) {
         dt = x_max - L;
@@ -202,15 +202,15 @@ bool is_out(const int i, int &dt) {
     return false;
 }
 
-int solve() {
-    int cumulated = 0;
+long solve() {
+    long cumulated = 0;
 
     for (int i = 0; i <= N; i++) {
         bool flag = false;
-        int mmmin = 200000000;
+        long mmmin = 200000000;
 
         for (int j = 0; j < i; j++) {
-            int dt;
+            long dt;
             if (is_collision(i, j, dt)) {
                 // printf("coll: %d, %d (%d)\n", i, j, dt);
                 mmmin = min(mmmin, dt);
@@ -222,7 +222,7 @@ int solve() {
             return cumulated + mmmin;
         }
 
-        int dt;
+        long dt;
         if (is_out(i, dt)) {
             // printf("out: %d (%d)\n", i, dt);
             return cumulated + dt;
@@ -237,7 +237,7 @@ int solve() {
 int main() {
     cin >> L >> N;
     for (int i = 0; i < N; i++) {
-        scanf("%d %c", &ts[i], &dirs[i]);
+        scanf("%ld %c", &ts[i], &dirs[i]);
     }
 
     construct_boxes();
@@ -251,6 +251,6 @@ int main() {
 //        cout << '\n';
 //    }
 
-    const int res = solve();
+    const long res = solve();
     cout << res << '\n';
 }
