@@ -87,7 +87,67 @@ void construct_boxes() {
     boxes[N][4] = dir;
 }
 
-bool is_collision(const int i, const int j) {
+bool is_collision(const int i, const int j, int &dt) {
+    bool flag = false;
+    int *box_i = boxes[i];
+    int *box_j = boxes[j];
+
+    if (box_i[4] % 2 == 0 && box_j[4] % 2 == 0 && box_i[1] == box_j[1]) {
+        int i_min = min(box_i[0], box_i[2]);
+        int i_max = max(box_i[0], box_i[2]);
+        int j_min = min(box_j[0], box_j[2]);
+        int j_max = max(box_j[0], box_j[2]);
+
+        if (i_max < j_min || j_max < i_min) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    if (box_i[4] % 2 == 1 && box_j[4] % 2 == 1 && box_i[0] == box_i[0]) {
+        int i_min = min(box_i[1], box_i[3]);
+        int i_max = max(box_i[1], box_i[3]);
+        int j_min = min(box_j[1], box_j[3]);
+        int j_max = max(box_j[1], box_j[3]);
+
+        if (i_max < j_min || j_max < i_min) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    if (box_i[4] % 2 == 0) {    // i: hor, j: ver
+        int i_x_min = min(box_i[0], box_i[2]);
+        int i_x_max = max(box_i[0], box_i[2]);
+        int j_y_min = min(box_j[1], box_j[3]);
+        int j_y_max = max(box_j[1], box_j[3]);
+
+        if (i_x_min <= box_j[0] && box_j[0] <= i_x_max
+                && j_y_min <= box_i[1] && box_i[1] <= j_y_max) {
+            printf("a: %d, %d\n", box_i[1], box_j[0]);
+            dt = abs(box_i[0] - box_j[0]);
+            return true;
+        } else {
+            return false;
+        }
+    } else {                    // i: ver, j: hor
+        int i_y_min = min(box_i[1], box_i[3]);
+        int i_y_max = max(box_i[1], box_i[3]);
+        int j_x_min = min(box_j[0], box_j[2]);
+        int j_x_max = max(box_j[0], box_j[2]);
+
+        if (i_y_min <= box_j[1] && box_j[1] <= i_y_max
+                && j_x_min <= box_i[0] && box_i[0] <= j_x_max) {
+            printf("a: %d, %d\n", box_i[0], box_j[1]);
+            dt = abs(box_i[1] - box_j[1]);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     return false;
 }
 
@@ -97,8 +157,8 @@ bool is_out(const int i, int &dt) {
     const int x_min = min(boxes[i][0], boxes[i][2]);
     const int y_min = min(boxes[i][1], boxes[i][3]);
 
-    const int w = abs(boxes[i][2] - boxes[i][0]);
-    const int h = abs(boxes[i][3] - boxes[i][1]);
+    const int w = abs(boxes[i][2] - boxes[i][0]) + 1;
+    const int h = abs(boxes[i][3] - boxes[i][1]) + 1;
 
     if (x_max > L) {
         dt = x_max - L;
@@ -127,8 +187,9 @@ bool is_out(const int i, int &dt) {
 void solve() {
     for (int i = 0; i <= N; i++) {
         for (int j = 0; j < i; j++) {
-            if (is_collision(i, j)) {
-                printf("collision: %d, %d\n", i, j);
+            int dt;
+            if (is_collision(i, j, dt)) {
+                printf("collision: %d, %d (%d)\n", i, j, dt);
                 return;
             }
         }
