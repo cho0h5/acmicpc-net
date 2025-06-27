@@ -115,7 +115,7 @@ bool is_collision(const int i, const int j, int &dt) {
         }
     }
 
-    if (box_i[4] % 2 == 1 && box_j[4] % 2 == 1 && box_i[0] == box_i[0]) {
+    if (box_i[4] % 2 == 1 && box_j[4] % 2 == 1 && box_i[0] == box_j[0]) {
         int i_min = min(box_i[1], box_i[3]);
         int i_max = max(box_i[1], box_i[3]);
         int j_min = min(box_j[1], box_j[3]);
@@ -209,12 +209,14 @@ int solve() {
         for (int j = 0; j < i; j++) {
             int dt;
             if (is_collision(i, j, dt)) {
+                // printf("coll: %d, %d (%d)\n", i, j, dt);
                 return cumulated + dt;
             }
         }
 
         int dt;
         if (is_out(i, dt)) {
+            // printf("out: %d (%d)\n", i, dt);
             return cumulated + dt;
         }
 
