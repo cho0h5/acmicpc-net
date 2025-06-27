@@ -62,7 +62,7 @@ void construct_boxes() {
         }
 
         if (dirs[i] == 'L') dir = (dir + 1) % 4;
-        else dir = (dir - 1) % 4;
+        else dir = (dir + 3) % 4;
     }
 
     // for n
@@ -101,6 +101,16 @@ bool is_collision(const int i, const int j, int &dt) {
         if (i_max < j_min || j_max < i_min) {
             return false;
         } else {
+            const int coll_right = min(i_max, j_max);
+            const int coll_left = max(i_min, j_min);
+
+            if (box_i[0] == coll_left || box_i[0] == coll_right) {
+                dt = 0;
+            } else {
+                const int candi1 = abs(box_i[0] - coll_left);
+                const int candi2 = abs(box_i[0] - coll_right);
+                dt = min(candi1, candi2);
+            }
             return true;
         }
     }
@@ -114,6 +124,16 @@ bool is_collision(const int i, const int j, int &dt) {
         if (i_max < j_min || j_max < i_min) {
             return false;
         } else {
+            const int coll_up = min(i_max, j_max);
+            const int coll_down = max(i_min, j_min);
+
+            if (box_i[1] == coll_up || box_i[1] == coll_down) {
+                dt = 0;
+            } else {
+                const int candi1 = abs(box_i[1] - coll_up);
+                const int candi2 = abs(box_i[1] - coll_down);
+                dt = min(candi1, candi2);
+            }
             return true;
         }
     }
@@ -126,7 +146,6 @@ bool is_collision(const int i, const int j, int &dt) {
 
         if (i_x_min <= box_j[0] && box_j[0] <= i_x_max
                 && j_y_min <= box_i[1] && box_i[1] <= j_y_max) {
-            printf("a: %d, %d\n", box_i[1], box_j[0]);
             dt = abs(box_i[0] - box_j[0]);
             return true;
         } else {
@@ -140,7 +159,6 @@ bool is_collision(const int i, const int j, int &dt) {
 
         if (i_y_min <= box_j[1] && box_j[1] <= i_y_max
                 && j_x_min <= box_i[0] && box_i[0] <= j_x_max) {
-            printf("a: %d, %d\n", box_i[0], box_j[1]);
             dt = abs(box_i[1] - box_j[1]);
             return true;
         } else {
@@ -191,7 +209,6 @@ int solve() {
         for (int j = 0; j < i; j++) {
             int dt;
             if (is_collision(i, j, dt)) {
-                printf("collision: %d, %d (%d)\n", i, j, dt);
                 return cumulated + dt;
             }
         }
