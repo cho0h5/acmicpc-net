@@ -8,7 +8,7 @@ struct State {
     int dir[4][4];
 
     int shark[2];
-    int fishes[17][2];
+    int fishes[16][2];
 
     int score;
 };
@@ -35,7 +35,7 @@ void move_fishes(State &state) {
             nx = cx + dx[cd];
             ny = cy + dy[cd];
 
-            if (nx < 0 || nx >= 4 || ny < 0 || ny >= 4) {
+            if (nx < 0 || nx >= 4 || ny < 0 || ny >= 4 || (nx == state.shark[0] && ny == state.shark[1])) {
                 state.dir[cx][cy] += 1;
                 if (state.dir[cx][cy] >= 9) {
                     state.dir[cx][cy] = 1;
@@ -46,9 +46,7 @@ void move_fishes(State &state) {
             break;
         }
 
-        if (nx == state.shark[0] && ny == state.shark[1]) { // If there is a shark, stop
-            continue;
-        } else if (state.name[nx][ny] != 0) {  // If there is fish, switch
+        if (state.name[nx][ny] != 0) {  // If there is fish, switch
             const int other_fish_i = state.name[nx][ny] - 1;
 
             swap(state.name[nx][ny], state.name[cx][cy]);
@@ -59,11 +57,8 @@ void move_fishes(State &state) {
             state.fishes[other_fish_i][0] = cx;
             state.fishes[other_fish_i][1] = cy;
         } else {    // else, just move
-            state.name[nx][ny] = state.name[cx][cy];
-            state.name[cx][cy] = 0;
-
-            state.dir[nx][ny] = state.dir[cx][cy];
-            state.dir[cx][cy] = 0;
+            swap(state.name[nx][ny], state.name[cx][cy]);
+            swap(state.dir[nx][ny], state.dir[cx][cy]);
             
             state.fishes[i][0] = nx;
             state.fishes[i][1] = ny;
@@ -147,8 +142,8 @@ int main() {
         for (int j = 0; j < 4; j++) {
             cin >> state.name[i][j];
             cin >> state.dir[i][j];
-            state.fishes[state.name[i][j]][0] = i;
-            state.fishes[state.name[i][j]][1] = j;
+            state.fishes[state.name[i][j] - 1][0] = i;
+            state.fishes[state.name[i][j] - 1][1] = j;
         }
     }
     const int fish_i = state.name[0][0] - 1;
