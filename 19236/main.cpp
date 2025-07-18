@@ -80,8 +80,6 @@ void print_state(const State &state, const int step) {
 }
 
 void backtracking(State state, const int n, const int step) {
-    print_state(state, step);
-
     // Simul
     const int scx = state.shark[0];
     const int scy = state.shark[1];
@@ -93,7 +91,7 @@ void backtracking(State state, const int n, const int step) {
     if (snx < 0 || snx >= 4 || sny < 0 || sny >= 4) {
         if (state.score > maximum) {
             maximum = state.score;
-            printf("maximum: %d\n", maximum);
+            // printf("maximum: %d\n", maximum);
         }
         return;
     }
@@ -102,7 +100,7 @@ void backtracking(State state, const int n, const int step) {
     if (state.name[snx][sny] == 0) {
         if (state.score > maximum) {
             maximum = state.score;
-            printf("maximum: %d\n", maximum);
+            // printf("maximum: %d\n", maximum);
         }
         return;
     }
@@ -112,17 +110,19 @@ void backtracking(State state, const int n, const int step) {
     state.score += fish_i + 1;
     state.name[snx][sny] = 0;
     // Remove fish
-    state.fishes[fish_i][0] = 0;
-    state.fishes[fish_i][1] = 0;
+    state.fishes[fish_i][0] = -1;
+    state.fishes[fish_i][1] = -1;
     // Move Shark
     state.shark[0] = snx;
     state.shark[1] = sny;
 
-    printf("Eat, move\n");
-    print_state(state, step);
+    // printf("-------- after move shark\n");
+    // print_state(state, step);
 
     // Move fishes
     move_fishes(state);
+    // printf("-------- after move fishes\n");
+    // print_state(state, step);
 
     // Keep going backtracking
     backtracking(state, 1, step + 1);
@@ -152,12 +152,11 @@ int main() {
     state.fishes[fish_i][0] = -1;
     state.fishes[fish_i][1] = -1;
 
-    print_state(state, -1);
-    move_fishes(state);
-    print_state(state, -1);
+    // print_state(state, -1);
 
     // Move fishes
     move_fishes(state);
+
     backtracking(state, 1, 0);
     backtracking(state, 2, 0);
     backtracking(state, 3, 0);
