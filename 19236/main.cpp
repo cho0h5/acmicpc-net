@@ -51,12 +51,8 @@ void move_fishes(State &state) {
         } else if (state.name[nx][ny] != 0) {  // If there is fish, switch
             const int other_fish_i = state.name[nx][ny] - 1;
 
-            state.name[nx][ny] = i + 1;
-            state.name[cx][cy] = other_fish_i + 1;
-
-            const int tmp1 = state.dir[nx][ny];
-            state.dir[nx][ny] = state.dir[cx][cy];
-            state.dir[cx][cy] = tmp1;
+            swap(state.name[nx][ny], state.name[cx][cy]);
+            swap(state.dir[nx][ny], state.dir[cx][cy]);
 
             state.fishes[i][0] = nx;
             state.fishes[i][1] = ny;
