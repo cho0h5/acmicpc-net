@@ -3,34 +3,36 @@
 #include <algorithm>
 
 using namespace std;
+typedef pair<int, int> ii;
 
 int n, m, k;
 
+bool compare1(const ii &a, const ii &b) {
+    return a.first > b.first;
+}
+
+bool compare2(const ii &a, const ii &b) {
+    return a.second > b.second;
+}
+
 int main() {
-    ios_base::sync_with_stdio();
+    ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
 
     cin >> n >> m >> k;
-    vector<pair<int, int>> v;
+    vector<ii> v;
     for (int i = 0; i < n; i++) {
         int x, y;
         cin >> x >> y;
         v.push_back({y, x});
     }
-    sort(v.begin(), v.end(), greater<pair<int, int>>());
+    sort(v.begin(), v.end(), compare1);
+    sort(v.begin() + k, v.end(), compare2);
 
     long long sumation = 0;
-    for (int i = 0; i < k; i++) {
+    for (int i = 0; i < k + m; i++) {
         sumation += v[i].second;
-    }
-    vector<int> vv;
-    for (int i = k; i < n; i++) {
-        vv.push_back(v[i].second);
-    }
-    sort(vv.begin(), vv.end(), greater<int>());
-    for (int i = 0; i < m; i++) {
-        sumation += vv[i];
     }
     printf("%lld\n", sumation);
 }
