@@ -3,7 +3,11 @@
 #include <algorithm>
 
 using namespace std;
-typedef pair<int, int> ii;
+
+struct ii {
+    int first;
+    int second;
+};
 
 int n, m, k;
 ii v[200000];
