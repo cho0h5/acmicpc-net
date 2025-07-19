@@ -6,6 +6,7 @@ using namespace std;
 typedef pair<int, int> ii;
 
 int n, m, k;
+ii v[200000];
 
 bool compare1(const ii &a, const ii &b) {
     return a.first > b.first;
@@ -21,14 +22,11 @@ int main() {
     cout.tie(NULL);
 
     cin >> n >> m >> k;
-    vector<ii> v;
     for (int i = 0; i < n; i++) {
-        int x, y;
-        cin >> x >> y;
-        v.push_back({y, x});
+        cin >> v[i].second >> v[i].first;
     }
-    sort(v.begin(), v.end(), compare1);
-    sort(v.begin() + k, v.end(), compare2);
+    sort(v, v + n, compare1);
+    sort(v + k, v + n, compare2);
 
     long long sumation = 0;
     for (int i = 0; i < k + m; i++) {
