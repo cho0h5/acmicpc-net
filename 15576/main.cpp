@@ -12,7 +12,7 @@ int upper_2th(const int size) {
         result *= 2;
     }
 
-    return result * 2;
+    return result;
 }
 
 vector<cpx> string_to_vec(const string &str, const int size) {
@@ -48,7 +48,7 @@ void fft(vector<cpx> &f, const cpx w) {
 
 void print_cpxs(const vector<cpx> f) {
     for (int i = 0; i < f.size(); i++) {
-        printf("%d ", (char)round(f[i].real()));
+        printf("%d ", (int)round(f[i].real()));
     }
     printf("\n");
 }
@@ -63,7 +63,7 @@ int main() {
 
     const double pi = acos(-1);
     const cpx j(0.0, 1.0);
-    const int size = upper_2th(max(a.size(), b.size()));
+    const int size = upper_2th(a.size() + b.size());
     const cpx w = exp(2.0 / size * pi * j);
     printf("w: %f + %fi\n", w.real(), w.imag());
     vector<cpx> f = string_to_vec(a, size);
@@ -93,6 +93,10 @@ int main() {
     print_cpxs(h);
 
     fft(h, conj(w));
+
+    for (int i = 0; i < size; i++) {
+        h[i] /= size;
+    }
 
     printf("h : ");
     print_cpxs(h);
