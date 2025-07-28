@@ -12,7 +12,7 @@ int upper_2th(const int size) {
         result *= 2;
     }
 
-    return result;
+    return result * 2;
 }
 
 vector<cpx> string_to_vec(const string &str, const int size) {
@@ -30,11 +30,11 @@ void fft(vector<cpx> &f, const cpx w) {
         return;
     }
 
-    vector<cpx> feven(f.size());
-    vector<cpx> fodd(f.size());
-    for (int i = 0; i < f.size / 2(); i++) {
-        feven[i] = f[i + 1];
-        fodd[i] = f[i];
+    vector<cpx> feven(f.size() / 2);
+    vector<cpx> fodd(f.size() / 2);
+    for (int i = 0; i < f.size() / 2; i++) {
+        feven[i] = f[i * 2 + 1];
+        fodd[i] = f[i * 2];
     }
 
     fft(feven, w * w);
@@ -46,6 +46,13 @@ void fft(vector<cpx> &f, const cpx w) {
     }
 }
 
+void print_cpxs(const vector<cpx> f) {
+    for (int i = 0; i < f.size(); i++) {
+        printf("%d ", (char)round(f[i].real()));
+    }
+    printf("\n");
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
@@ -54,20 +61,41 @@ int main() {
     string a, b;
     cin >> a >> b;
 
+    const double pi = acos(-1);
+    const cpx j(0.0, 1.0);
     const int size = upper_2th(max(a.size(), b.size()));
-    const int w = cos
+    const cpx w = exp(2.0 / size * pi * j);
+    printf("w: %f + %fi\n", w.real(), w.imag());
     vector<cpx> f = string_to_vec(a, size);
     vector<cpx> g = string_to_vec(b, size);
 
-    fft(f);
-    fft(g);
+    printf("f : ");
+    print_cpxs(f);
+    printf("g : ");
+    print_cpxs(g);
+    printf("\n");
+
+    fft(f, w);
+    fft(g, w);
+
+    printf("f': ");
+    print_cpxs(f);
+    printf("g': ");
+    print_cpxs(g);
+    printf("\n");
 
     vector<cpx> h(size);
     for (int i = 0; i < size; i++) {
         h[i] = f[i] * g[i];
     }
 
-    fft(h);
+    printf("h': ");
+    print_cpxs(h);
+
+    fft(h, conj(w));
+
+    printf("h : ");
+    print_cpxs(h);
 
     return 0;
 }
