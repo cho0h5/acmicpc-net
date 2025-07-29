@@ -9,6 +9,9 @@ typedef complex<double> cpx;
 const double pi = acos(-1);
 const cpx j(0.0, 1.0);
 
+int maximum = 1000000;
+int n;
+vector<int> inputs;
 bool seive[1000000];
 
 int upper_2th(const int size) {
@@ -44,13 +47,13 @@ void fft(vector<cpx> &f, const cpx w) {
     }
 }
 
-void init_seive() {
+void init_seive(const int thresh) {
     seive[0] = true;
     seive[1] = true;
-    for (int i = 0; i < 1000000; i++) {
+    for (long long i = 0; i < thresh; i++) {
         if (seive[i]) continue;
 
-        for (int j = i * 2; j < 1000000; j += i) {
+        for (long long j = i * i; j < thresh; j += i) {
             seive[j] = true;
         }
     }
@@ -61,18 +64,28 @@ int main() {
     cin.tie(NULL);
     cout.tie(NULL);
 
-    init_seive();
+    // Input
+    cin >> n;
+    inputs.reserve(n);
+    for (int i = 0; i < n; i++) {
+        int x;
+        cin >> x;
+        inputs.push_back(x);
+        maximum = max(maximum, x);
+    }
 
+    int size = upper_2th(maximum * 2);
+    init_seive(1000000);
     // Set f and g
-    const int size = upper_2th(2000000);
     vector<cpx> f(size);
     vector<cpx> g(size);
     for (int i = 0; i < 1000000; i++) {
         if (seive[i]) continue;
 
         if (i > 2) f[i] = 1;
-        g[i * 2] = 1;
+        if (i * 2 < 1000000) g[i * 2] = 1;
     }
+    
 
     // FFT
     const cpx w = exp(2.0 / size * pi * j);
@@ -88,15 +101,17 @@ int main() {
     for (int i = 0; i < size; i++) {
         h[i] /= cpx(size, 0);
     }
-
-    // Input
-    int n, x;
-    cin >> n;
-    for (int i = 0; i < n; i++) {
-        cin >> x;
-
+    // Print results
+    for (auto x: inputs) {
         printf("%d\n", (int)round(h[x].real()));
     }
+
+    // Debug
+    printf("--------\n");
+    for (int i = 0; i < 20; i++) {
+        printf("%d ", (int)round(h[i].real()));
+    }
+    printf("\n");
 
     return 0;
 }
