@@ -36,6 +36,8 @@ int main() {
                 if (s_new <= e_existing) posters.insert({{s_new, e_existing}, it->second});
 
                 it = posters.erase(it);
+
+                if (e < s_existing) break;
             } else {    // not overlaped
                 it++;
             }
