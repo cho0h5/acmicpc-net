@@ -1,12 +1,8 @@
 #include <iostream>
-#include <vector>
 
 using namespace std;
 
-void print_paper(const vector<vector<int>> &paper) {
-    const int n = paper.size();
-    const int m = paper[0].size();
-
+void print_paper(int paper[][6], int n, int m) {
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
             printf("%d ", paper[i][j]);
@@ -17,13 +13,9 @@ void print_paper(const vector<vector<int>> &paper) {
     printf("\n");
 }
 
-vector<vector<int>> fold_horizotally(const vector<vector<int>> &paper, const int k) {
-    const int n = paper.size();
-    const int m = paper[0].size();
-
-    const int nn = max(k, n - k);
-    const int nm = m;
-    vector<vector<int>> new_paper(nn, vector<int>(nm, 0));
+void fold_horizotally(int paper[][6], int n, int m, int k, int new_paper[][6], int &nn, int &nm) {
+    nn = max(k, n - k);
+    nm = m;
 
     // upper
     for (int i = 0; i < k; i++) {
@@ -38,17 +30,11 @@ vector<vector<int>> fold_horizotally(const vector<vector<int>> &paper, const int
             new_paper[nn - (i - k) - 1][j] += paper[i][j];
         }
     }
-
-    return new_paper;
 }
 
-vector<vector<int>> fold_vertically(const vector<vector<int>> &paper, const int k) {
-    const int n = paper.size();
-    const int m = paper[0].size();
-
-    const int nn = n;
-    const int nm = max(k, m - k);
-    vector<vector<int>> new_paper(nn, vector<int>(nm, 0));
+void fold_vertically(int paper[][6], int n, int m, int k, int new_paper[][6], int &nn, int &nm) {
+    nn = n;
+    nm = max(k, m - k);
 
     // left
     for (int i = 0; i < n; i++) {
@@ -63,15 +49,10 @@ vector<vector<int>> fold_vertically(const vector<vector<int>> &paper, const int 
             new_paper[i][nm - (j - k) - 1] += paper[i][j];
         }
     }
-
-    return new_paper;
 }
 
-int find_max(const vector<vector<int>> &paper) {
+int find_max(int paper[][6], int n, int m) {
     int maximum = paper[0][0];
-
-    const int n = paper.size();
-    const int m = paper[0].size();
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
@@ -82,26 +63,27 @@ int find_max(const vector<vector<int>> &paper) {
     return maximum;
 }
 
-int search(const vector<vector<int>> &paper) {
-    int maximum = find_max(paper);
-
-    const int n = paper.size();
-    const int m = paper[0].size();
+int search(int paper[][6], int n, int m) {
+    int maximum = find_max(paper, n, m);
 
     for (int i = 1; i <= n - 1; i++) {
-        vector<vector<int>> new_paper = fold_horizotally(paper, i);
+        int new_paper[6][6] = {};
+        int nn, nm;
+        fold_horizotally(paper, n, m, i, new_paper, nn, nm);
 
-        // print_paper(new_paper);
+        // print_paper(new_paper, nn, nm);
 
-        maximum = max(maximum, search(new_paper));
+        maximum = max(maximum, search(new_paper, nn, nm));
     }
 
     for (int i = 1; i <= m - 1; i++) {
-        vector<vector<int>> new_paper = fold_vertically(paper, i);
+        int new_paper[6][6] = {};
+        int nn, nm;
+        fold_vertically(paper, n, m, i, new_paper, nn, nm);
 
-        // print_paper(new_paper);
+        // print_paper(new_paper, nn, nm);
 
-        maximum = max(maximum, search(new_paper));
+        maximum = max(maximum, search(new_paper, nn, nm));
     }
 
     return maximum;
@@ -114,14 +96,14 @@ int main() {
 
     int n, m;
     cin >> n >> m;
-    vector<vector<int>> paper(n, vector<int>(m, 0));
+    int paper[6][6] = {};
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
             cin >> paper[i][j];
         }
     }
 
-    printf("%d\n", search(paper));
+    printf("%d\n", search(paper, n, m));
 
     return 0;
 }
