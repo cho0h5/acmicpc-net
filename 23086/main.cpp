@@ -8,10 +8,9 @@ using namespace std;
 using ii = pair<int, int>;
 
 int n, m, k;
-vector<pair<int, int>> graph_origin;
-vector<int> order;
 
-vector<int> graph[100001];
+vector<ii> graph[100001];
+int edge_remove_order[200001];
 int vst[100001];
 
 int optim_ck = 2147483647;
@@ -24,39 +23,7 @@ bool bfs(const int ck) {
     // printf("\n");
     // printf("bfs(%d)\n", ck);
 
-    // init
-    for (int i = 1; i <= n; i++) {
-        graph[i].clear();
-        vst[i] = 0;
-    }
-
-    unordered_set<int> ban(order.begin(), order.begin() + ck);
-
-    for (int i = 0; i < m; i++) {
-        if (ban.find(i + 1) != ban.end()) continue;
-
-        const int a = graph_origin[i].first;
-        const int b = graph_origin[i].second;
-
-        graph[a].push_back(b);
-        graph[b].push_back(a);
-    }
-
-    // debug
-//    printf("ban: ");
-//    for (auto e: ban) {
-//        printf("%d ", e);
-//    }
-//    printf("\n");
-//
-//    for (int i = 1; i <= n; i++) {
-//        printf("%d: ", i);
-//        for (int j = 0; j < graph[i].size(); j++) {
-//            printf("%d ", graph[i][j]);
-//        }
-//        printf("\n");
-//    }
-//    printf("\n");
+    for (int i = 1; i <= n; i++) vst[i] = 0;
 
     // bfs
     int class_population[3] = { 0, };
@@ -65,7 +32,8 @@ bool bfs(const int ck) {
     vst[1] = 1;
     class_population[vst[1]] += 1;
     for (int i = 0; i < graph[1].size(); i++) {
-        q.push({graph[1][i], 2});
+        if (edge_remove_order[graph[1][i].second] < ck) continue;
+        q.push({graph[1][i].first, 2});
     }
 
     while (q.size()) {
@@ -86,7 +54,8 @@ bool bfs(const int ck) {
         vst[cn] = cc;
         class_population[vst[cn]] += 1;
         for (int i = 0; i < graph[cn].size(); i++) {
-            q.push({graph[cn][i], 3 - cc});
+            if (edge_remove_order[graph[cn][i].second] < ck) continue;
+            q.push({graph[cn][i].first, 3 - cc});
         }
     }
 
@@ -120,15 +89,17 @@ int main() {
     cout.tie(NULL);
 
     cin >> n >> m >> k;
-    for (int i = 0; i < m; i++) {
+    for (int i = 1; i <= m; i++) {
         int a, b;
         cin >> a >> b;
-        graph_origin.push_back({a, b});
+        graph[a].push_back({b, i});
+        graph[b].push_back({a, i});
+        edge_remove_order[i] = k;
     }
     for (int i = 0; i < k; i++) {
         int a;
         cin >> a;
-        order.push_back(a);
+        edge_remove_order[a] = i;
     }
 
 //    for (int i = 0; i <= k; i++) {
